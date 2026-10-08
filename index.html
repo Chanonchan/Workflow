@@ -1,0 +1,1167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Privacy: this page may not load or send anything over the network. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<title>Step Workflow</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --bg: #f4f5f7; --surface: #ffffff; --surface-2: #f0f2f5; --text: #1b1f24; --muted: #5b6470;
+  --border: #d8dce2; --accent: #2f6fde; --accent-text: #ffffff; --accent-soft: #e7eefc;
+  --ok: #1d8049; --ok-soft: #e2f3e9; --danger: #c22f2f; --danger-soft: #fbe9e9;
+  --warn: #8a5d00; --warn-soft: #fff3d1;
+  --shadow: 0 1px 2px rgba(0,0,0,.05), 0 2px 10px rgba(0,0,0,.04);
+  --radius: 12px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111418; --surface: #1a1e24; --surface-2: #232830; --text: #e5e8ed; --muted: #9aa3af;
+    --border: #2f3641; --accent: #6d9fff; --accent-text: #0b1220; --accent-soft: #1c2943;
+    --ok: #4cc38a; --ok-soft: #16301f; --danger: #ff7d7d; --danger-soft: #3a1d1e;
+    --warn: #e3b341; --warn-soft: #382c10;
+    --shadow: 0 1px 2px rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111418; --surface: #1a1e24; --surface-2: #232830; --text: #e5e8ed; --muted: #9aa3af;
+  --border: #2f3641; --accent: #6d9fff; --accent-text: #0b1220; --accent-soft: #1c2943;
+  --ok: #4cc38a; --ok-soft: #16301f; --danger: #ff7d7d; --danger-soft: #3a1d1e;
+  --warn: #e3b341; --warn-soft: #382c10;
+  --shadow: 0 1px 2px rgba(0,0,0,.4);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Thai", sans-serif;
+}
+[hidden] { display: none !important; }
+h1, h2, h3, h4 { margin: 0; line-height: 1.25; }
+h2 { font-size: 1.15rem; }
+h3 { font-size: 1.05rem; }
+h4 { font-size: .85rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+a { color: var(--accent); }
+
+/* Top bar */
+.topbar {
+  position: sticky; top: 0; z-index: 20; background: var(--surface); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px; padding: 8px 16px;
+}
+.brand { font-weight: 700; font-size: 1.05rem; white-space: nowrap; }
+.tabs { display: flex; gap: 4px; background: var(--surface-2); padding: 3px; border-radius: 10px; margin: 0 auto; }
+.tab {
+  border: 0; background: transparent; color: var(--muted); font: inherit; font-weight: 600;
+  padding: 6px 18px; border-radius: 8px; cursor: pointer;
+}
+.tab[aria-selected="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.wrap-main { max-width: 900px; margin: 0 auto; padding: 16px; }
+
+/* Generic controls */
+.btn {
+  font: inherit; font-size: .9rem; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  padding: 6px 12px; border-radius: 8px; cursor: pointer; white-space: nowrap; min-height: 34px;
+}
+.btn:hover:not(:disabled) { background: var(--surface-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+.btn.primary:hover:not(:disabled) { filter: brightness(1.07); background: var(--accent); }
+.btn.danger { color: var(--danger); }
+.btn.danger.solid { background: var(--danger); border-color: var(--danger); color: #fff; }
+.btn.ghost { border-color: transparent; background: transparent; }
+.btn.small { padding: 3px 9px; min-height: 28px; font-size: .82rem; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.icon-btn {
+  font: inherit; border: 1px solid transparent; background: transparent; color: var(--muted);
+  width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: inline-grid; place-items: center; flex: none;
+}
+.icon-btn:hover:not(:disabled) { background: var(--surface-2); color: var(--text); }
+.icon-btn.danger:hover:not(:disabled) { color: var(--danger); background: var(--danger-soft); }
+.icon-btn:disabled { opacity: .3; cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="text"], select, textarea {
+  font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 10px; min-height: 34px; width: 100%; min-width: 0;
+}
+textarea { resize: vertical; min-height: 60px; }
+input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent); outline: 2px solid var(--accent-soft); outline-offset: 0; }
+input:disabled, select:disabled, textarea:disabled { background: var(--surface-2); }
+input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; accent-color: var(--accent); margin: 0; flex: none; }
+.row { display: flex; align-items: center; gap: 8px; }
+.row.wrap { flex-wrap: wrap; }
+.row.between { justify-content: space-between; }
+.btn-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.btn-group.tight { gap: 0; flex-wrap: nowrap; }
+.grow { flex: 1 1 auto; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 12px; }
+.hint, .meta { color: var(--muted); font-size: .85rem; }
+.hint { margin: 8px 0 0; }
+.sub { display: block; font-size: .82rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+.field { display: block; }
+.lbl { font-weight: 600; }
+.saved { font-size: .82rem; color: var(--ok); font-weight: 600; white-space: nowrap; }
+.saved.bad { color: var(--danger); }
+.empty { text-align: center; color: var(--muted); padding: 24px 8px; }
+.banner { border-radius: 10px; padding: 10px 14px; margin: 12px 16px 0; font-size: .9rem; }
+.banner.warn { background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn); }
+
+/* Setup page */
+.toolbar .row + .row { margin-top: 10px; }
+.toolbar select { width: auto; min-width: 180px; flex: 1 1 200px; max-width: 360px; }
+.step-edit { padding: 0; }
+.step-edit .step-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.step-edit.collapsed .step-head { border-bottom: 0; }
+.step-edit.dragging { opacity: .45; }
+.step-edit.drop-target { outline: 2px dashed var(--accent); outline-offset: 2px; }
+.handle { cursor: grab; color: var(--muted); font-size: 1.2rem; padding: 0 2px; user-select: none; touch-action: none; }
+.step-num { font-size: .78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+.topic-input { font-weight: 600; }
+.step-body { padding: 12px 14px 14px; display: grid; gap: 16px; }
+.section-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.todo-edit { border: 1px solid var(--border); border-radius: 10px; padding: 8px; margin-bottom: 8px; background: var(--surface-2); }
+.todo-main { display: grid; grid-template-columns: minmax(0, 1fr) 190px auto auto; gap: 8px; align-items: center; }
+.req { display: inline-flex; align-items: center; gap: 6px; font-size: .85rem; white-space: nowrap; cursor: pointer; }
+.options { margin: 8px 0 0 12px; display: grid; gap: 6px; }
+.opt { display: flex; align-items: center; gap: 6px; }
+.opt-mark { color: var(--muted); width: 22px; text-align: center; flex: none; font-size: .85rem; }
+.link-edit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) auto; gap: 8px; align-items: center; margin-bottom: 6px; }
+.link-warn { grid-column: 1 / -1; color: var(--danger); font-size: .8rem; margin-top: -2px; }
+.add-step { width: 100%; padding: 10px; }
+
+/* Work page */
+.np-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; gap: 10px; align-items: end; margin-top: 10px; }
+.proj-list { list-style: none; margin: 10px 0 0; padding: 0; }
+.proj-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border); }
+.proj-row:first-child { border-top: 0; }
+.proj-info { min-width: 0; }
+.linklike { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: var(--accent); cursor: pointer; text-align: left; }
+.mini { display: inline-block; width: 60px; height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; vertical-align: middle; margin: 0 4px; }
+.mini > i { display: block; height: 100%; background: var(--ok); }
+.badge { display: inline-block; font-size: .72rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--ok-soft); color: var(--ok); margin-left: 6px; }
+.proj-title { font-size: 1.35rem; margin: 10px 0 2px; overflow-wrap: anywhere; }
+.progress { height: 10px; background: var(--surface-2); border-radius: 5px; overflow: hidden; margin-top: 12px; }
+.progress > div { height: 100%; background: var(--ok); border-radius: 5px; transition: width .25s; }
+.progress-label { font-size: .88rem; font-weight: 600; margin-top: 6px; }
+.complete { background: var(--ok-soft); color: var(--ok); border: 1px solid var(--ok); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; font-weight: 600; }
+.complete strong { font-size: 1.1rem; display: block; }
+.step { padding: 0; }
+.step.active { border-color: var(--accent); }
+.step .step-head { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+.step-titles { flex: 1; min-width: 0; }
+.step-titles h3 { overflow-wrap: anywhere; }
+.tick {
+  width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--border); flex: none;
+  display: grid; place-items: center; font-weight: 800; font-size: .9rem; color: transparent; cursor: default; user-select: none;
+}
+.tick.on { background: var(--ok); border-color: var(--ok); color: #fff; }
+.step-line { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font: inherit; color: var(--text); cursor: pointer; padding: 10px 14px; }
+.step-line:hover { background: var(--surface-2); }
+.line-topic { flex: 1; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chev { color: var(--muted); }
+.todos { display: grid; gap: 10px; }
+.todo { border: 0; margin: 0; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); border-left: 3px solid transparent; min-width: 0; }
+.todo.is-done { border-left-color: var(--ok); }
+.todo legend, .todo .q { font-weight: 600; padding: 0; margin-bottom: 4px; float: left; width: 100%; }
+.todo legend + * { clear: both; }
+.check { display: flex; align-items: flex-start; gap: 8px; padding: 3px 0; cursor: pointer; overflow-wrap: anywhere; }
+.check input { margin-top: 2px; }
+.req-mark { color: var(--danger); font-weight: 700; }
+.links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.links ul { margin: 0; padding-left: 18px; }
+.links li { margin: 2px 0; overflow-wrap: anywhere; }
+.link-blocked { color: var(--muted); text-decoration: line-through; }
+.step.preview { opacity: .55; border-style: dashed; box-shadow: none; }
+.reveal { display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; }
+.plus {
+  width: 40px; height: 40px; border-radius: 50%; border: 2px dashed var(--border); background: var(--surface);
+  color: var(--muted); font-size: 1.4rem; line-height: 1; cursor: pointer; flex: none;
+}
+.plus:hover { border-color: var(--accent); color: var(--accent); }
+.footer { max-width: 900px; margin: 8px auto 32px; padding: 0 16px; color: var(--muted); font-size: .8rem; display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+
+/* Toasts + modal */
+#toasts { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 50; display: grid; gap: 8px; width: min(520px, calc(100% - 32px)); }
+.toast { display: flex; align-items: center; gap: 8px; padding: 10px 8px 10px 14px; border-radius: 10px; background: var(--text); color: var(--bg); box-shadow: 0 6px 20px rgba(0,0,0,.25); font-size: .9rem; }
+.toast > span { flex: 1; }
+.toast.error { background: var(--danger); color: #fff; }
+.toast.ok { background: var(--ok); color: #fff; }
+.toast .icon-btn { color: inherit; }
+dialog.modal { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); color: var(--text); padding: 18px; width: min(440px, calc(100% - 32px)); box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+dialog.modal::backdrop { background: rgba(0,0,0,.45); }
+dialog.modal p { margin: 10px 0; white-space: pre-line; overflow-wrap: anywhere; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+/* Phone */
+@media (max-width: 640px) {
+  .topbar { padding: 8px 12px; gap: 8px; }
+  .brand { font-size: .95rem; }
+  .tab { padding: 6px 12px; }
+  .wrap-main { padding: 12px 16px; }
+  .todo-main { grid-template-columns: minmax(0, 1fr) auto; }
+  .todo-main > input { grid-column: 1 / -1; }
+  .todo-main > select { grid-column: 1 / -1; }
+  .link-edit { grid-template-columns: minmax(0, 1fr) auto; }
+  .link-edit > input:first-child { grid-column: 1 / -1; }
+  .np-grid { grid-template-columns: 1fr; }
+  .links-grid { grid-template-columns: 1fr; }
+  .proj-row { flex-direction: column; align-items: stretch; }
+  .toolbar select { max-width: none; }
+  .step-edit .step-head { flex-wrap: wrap; }
+  .step-edit .step-head .topic-input { order: 3; flex-basis: 100%; }
+  .step-edit .step-head .btn-group { margin-left: auto; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Step Workflow</div>
+  <nav class="tabs" role="tablist" aria-label="Pages">
+    <button class="tab" role="tab" id="tab-setup" aria-controls="page-setup">Setup</button>
+    <button class="tab" role="tab" id="tab-work" aria-controls="page-work">Work</button>
+  </nav>
+  <button class="btn ghost" id="themeBtn" title="Switch theme"></button>
+</header>
+<div id="storageWarn" class="banner warn" role="alert" hidden></div>
+<main class="wrap-main">
+  <div id="page-setup" role="tabpanel" aria-labelledby="tab-setup"></div>
+  <div id="page-work" role="tabpanel" aria-labelledby="tab-work" hidden></div>
+</main>
+<footer class="footer">
+  <span>🔒 Private: this app makes no network requests. Data stays in this browser and in files you download. Links open in a new tab without sending this page's address or any of your answers.</span>
+  <button class="btn small danger" id="clearAll">Clear all data in this browser</button>
+</footer>
+<div id="toasts" aria-live="polite"></div>
+<input type="file" id="fileSetup" accept=".json,application/json" hidden>
+<input type="file" id="fileProject" accept=".json,application/json" hidden>
+
+<script>
+(() => {
+'use strict';
+
+/* ───────────── Constants & small helpers ───────────── */
+const SCHEMA = 1;
+const KIND_SETUP = 'step-workflow-setup';
+const KIND_PROJECT = 'step-workflow-project';
+const LS = { setups: 'sw.setups', active: 'sw.activeSetupId', projects: 'sw.projects', ui: 'sw.ui' };
+const TYPES = { checkbox: 'Checkbox', multi: 'Multiple checkboxes', single: 'Single choice', dropdown: 'Dropdown', text: 'Short text' };
+const MAX_FILE = 5 * 1024 * 1024;
+const isChoice = t => t === 'multi' || t === 'single' || t === 'dropdown';
+
+const $ = s => document.querySelector(s);
+const now = () => new Date().toISOString();
+const clone = o => JSON.parse(JSON.stringify(o));
+const uid = p => p + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const isObj = v => v !== null && typeof v === 'object' && !Array.isArray(v);
+const arr = v => Array.isArray(v) ? v : [];
+const str = (v, max = 2000) => typeof v === 'string' ? v.slice(0, max) : (typeof v === 'number' && isFinite(v) ? String(v) : '');
+const validDate = v => (typeof v === 'string' && !isNaN(Date.parse(v))) ? new Date(v).toISOString() : null;
+const move = (a, from, to) => { if (to < 0 || to >= a.length || from === to) return; a.splice(to, 0, a.splice(from, 1)[0]); };
+const fileSafe = s => (str(s, 120).replace(/[\\/:*?"<>|\u0000-\u001f]+/g, '_').replace(/^\.+/, '').trim()) || 'untitled';
+
+function fmtTime(d) {
+  try { return new Date(d).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; }
+}
+function fmtDateTime(d) {
+  try { return new Date(d).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }); } catch (e) { return String(d || ''); }
+}
+
+// DOM builder. User text only ever goes in via textContent / properties, never innerHTML.
+function h(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  let value;
+  if (props) for (const k in props) {
+    const v = props[k];
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'value') value = v;
+    else if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2), v);
+    else if (k === 'checked' || k === 'disabled' || k === 'selected') e[k] = !!v;
+    else if (k === 'dataset') Object.assign(e.dataset, v);
+    else e.setAttribute(k, v === true ? '' : String(v));
+  }
+  append(e, kids);
+  if (value !== undefined) e.value = value; // after children so <select> options exist
+  return e;
+}
+function append(e, kids) {
+  for (const k of kids.flat(Infinity)) {
+    if (k == null || k === false) continue;
+    e.append(k instanceof Node ? k : document.createTextNode(String(k)));
+  }
+}
+const btn = (label, fn, cls = '', attrs = {}) => h('button', Object.assign({ class: 'btn ' + cls, type: 'button', onclick: fn }, attrs), label);
+const iconBtn = (label, title, fn, disabled = false, cls = '') =>
+  h('button', { class: 'icon-btn ' + cls, type: 'button', title, 'aria-label': title, disabled, onclick: fn }, label);
+
+/* Only allow link types that cannot run code: http(s), mailto, file, or relative paths. */
+function safeHref(u) {
+  u = str(u).trim();
+  if (!u || /[\u0000-\u001f]/.test(u)) return null;
+  if (/^[a-zA-Z]:[\\/]/.test(u)) u = 'file:///' + u.replace(/\\/g, '/');      // C:\docs\a.pdf
+  else if (/^\\\\/.test(u)) u = 'file:' + u.replace(/\\/g, '/');               // \\server\share
+  let url;
+  try { url = new URL(u, document.baseURI); } catch (e) { return null; }
+  return ['http:', 'https:', 'mailto:', 'file:'].includes(url.protocol) ? url.href : null;
+}
+function linkView(l) {
+  const href = safeHref(l.url);
+  const label = l.label || l.url || '(no link)';
+  if (!href) return h('li', {}, h('span', { class: 'link-blocked', title: 'This link type is not allowed or the URL is empty' }, label));
+  // noopener + noreferrer: the opened site gets no referrer and no access back to this page.
+  return h('li', {}, h('a', { href, target: '_blank', rel: 'noopener noreferrer', referrerpolicy: 'no-referrer' }, label, ' ↗'));
+}
+
+/* ───────────── Storage (always try/catch) ───────────── */
+let storageOk = true;
+let lastSetupSaved = null, lastProjectSaved = null;
+
+function lsRead(key) {
+  let raw;
+  try { raw = localStorage.getItem(key); } catch (e) { storageFailed(); return undefined; }
+  if (raw == null) return undefined;
+  try { return JSON.parse(raw); } catch (e) { toast(`Saved browser data (${key}) was damaged and has been ignored.`, 'error'); return undefined; }
+}
+function lsWrite(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); return true; }
+  catch (e) { storageFailed(e && e.name === 'QuotaExceededError'); return false; }
+}
+function storageFailed(full) {
+  storageOk = false;
+  const w = $('#storageWarn');
+  if (!w) return;
+  w.textContent = (full ? 'Browser storage is full. ' : 'Browser storage is unavailable (private mode or blocked). ') +
+    'Changes are NOT saved in this browser — use "Export setup" and "Save project" to keep your work.';
+  w.hidden = false;
+}
+function savedText(d) { return storageOk ? (d ? `Saved ✓ ${fmtTime(d)}` : 'Saved ✓') : '⚠ Not saved'; }
+function updateSaved() {
+  for (const [id, d] of [['#savedSetup', lastSetupSaved], ['#savedWork', lastProjectSaved]]) {
+    const e = $(id);
+    if (e) { e.textContent = savedText(d); e.classList.toggle('bad', !storageOk); }
+  }
+}
+function saveSetups() {
+  const ok = lsWrite(LS.setups, state.setups) & lsWrite(LS.active, state.activeSetupId);
+  if (ok) lastSetupSaved = new Date();
+  updateSaved();
+}
+function saveProjects() {
+  if (lsWrite(LS.projects, state.projects)) lastProjectSaved = new Date();
+  updateSaved();
+}
+function saveUi() { lsWrite(LS.ui, state.ui); }
+
+/* ───────────── Validation / normalisation ───────────── */
+function checkVersion(v) {
+  if (v == null) return; // very old / hand-made file: accept and upgrade
+  const n = Number(v);
+  if (!isFinite(n)) throw new Error('The file has an invalid "schemaVersion".');
+  if (n > SCHEMA) throw new Error(`This file was made by a newer version of Step Workflow (schema ${n}). This app understands schema ${SCHEMA}.`);
+}
+function normTemplate(raw) {
+  if (!isObj(raw)) throw new Error('This is not a Step Workflow setup file.');
+  if (raw.kind === KIND_PROJECT) throw new Error('This is a project file. Open it on the Work page with "Open project file".');
+  if (raw.kind != null && raw.kind !== KIND_SETUP) throw new Error('This is not a Step Workflow setup file.');
+  checkVersion(raw.schemaVersion);
+  if (!Array.isArray(raw.steps)) throw new Error('The setup has no "steps" list.');
+  const ids = new Set();
+  const uniq = (id, p) => { id = str(id, 64); if (!id || ids.has(id)) id = uid(p); ids.add(id); return id; };
+  const link = (l, p) => ({ id: uniq(l.id, p), label: str(l.label, 300), url: str(l.url, 2000) });
+  return {
+    kind: KIND_SETUP,
+    schemaVersion: SCHEMA,
+    id: str(raw.id, 64) || uid('tpl'),
+    name: str(raw.name, 200).trim() || 'Untitled setup',
+    updatedAt: validDate(raw.updatedAt) || now(),
+    steps: raw.steps.filter(isObj).slice(0, 500).map(s => ({
+      id: uniq(s.id, 'st'),
+      topic: str(s.topic, 300),
+      note: str(s.note, 5000),
+      todos: arr(s.todos).filter(isObj).slice(0, 500).map(t => ({
+        id: uniq(t.id, 'td'),
+        label: str(t.label, 500),
+        type: Object.prototype.hasOwnProperty.call(TYPES, t.type) ? t.type : 'checkbox',
+        required: t.required === true,
+        options: [...new Set(arr(t.options).map(o => str(o, 300)).filter(o => o.trim() !== ''))].slice(0, 200)
+      })),
+      docs: arr(s.docs).filter(isObj).slice(0, 200).map(l => link(l, 'dl')),
+      forms: arr(s.forms).filter(isObj).slice(0, 200).map(l => link(l, 'fl'))
+    }))
+  };
+}
+function normAnswers(step, raw) {
+  raw = isObj(raw) ? raw : {};
+  const out = {};
+  for (const t of step.todos) {
+    const v = raw[t.id];
+    if (t.type === 'checkbox') out[t.id] = v === true;
+    else if (t.type === 'multi') out[t.id] = Array.isArray(v) ? t.options.filter(o => v.includes(o)) : [];
+    else if (t.type === 'text') out[t.id] = str(v, 5000);
+    else out[t.id] = (typeof v === 'string' && t.options.includes(v)) ? v : '';
+  }
+  return out;
+}
+function normProject(raw) {
+  if (!isObj(raw)) throw new Error('This is not a Step Workflow project file.');
+  if (raw.kind === KIND_SETUP) throw new Error('This is a setup file. Import it on the Setup page with "Import setup".');
+  if (raw.kind != null && raw.kind !== KIND_PROJECT) throw new Error('This is not a Step Workflow project file.');
+  checkVersion(raw.schemaVersion);
+  if (!isObj(raw.template)) throw new Error('The project file does not contain its setup template.');
+  let template;
+  try { template = normTemplate(raw.template); }
+  catch (e) { throw new Error('The setup inside the project file is invalid: ' + e.message); }
+  if (!template.steps.length) throw new Error("The project's setup has no steps.");
+  const rs = isObj(raw.steps) ? raw.steps : {};
+  const steps = {};
+  template.steps.forEach(s => {
+    const x = isObj(rs[s.id]) ? rs[s.id] : {};
+    steps[s.id] = {
+      answers: normAnswers(s, x.answers),
+      note: str(x.note, 20000),
+      status: ['locked', 'active', 'done'].includes(x.status) ? x.status : 'locked',
+      completedAt: validDate(x.completedAt)
+    };
+  });
+  let r = Number.isInteger(raw.revealedUpTo) ? raw.revealedUpTo : -1;
+  if (r < 0) template.steps.forEach((s, i) => { if (steps[s.id].status !== 'locked') r = i; }); // infer for older files
+  const p = {
+    kind: KIND_PROJECT,
+    schemaVersion: SCHEMA,
+    id: str(raw.id, 64) || uid('prj'),
+    name: str(raw.name, 200).trim() || 'Untitled project',
+    createdAt: validDate(raw.createdAt) || now(),
+    updatedAt: validDate(raw.updatedAt) || now(),
+    completedAt: validDate(raw.completedAt),
+    template,
+    revealedUpTo: Math.max(0, Math.min(r, template.steps.length - 1)),
+    steps
+  };
+  recompute(p);
+  return p;
+}
+function dedupeIds(list, prefix) {
+  const seen = new Set();
+  for (const x of list) { if (seen.has(x.id)) x.id = uid(prefix); seen.add(x.id); }
+}
+
+/* ───────────── Progress logic ───────────── */
+function todoDone(t, a) {
+  switch (t.type) {
+    case 'checkbox': return a === true;
+    case 'multi': return Array.isArray(a) && a.length > 0;
+    case 'text': return typeof a === 'string' && a.trim() !== '';
+    default: return typeof a === 'string' && a !== '';
+  }
+}
+const stepComplete = (step, st) => step.todos.every(t => !t.required || todoDone(t, st.answers[t.id]));
+function recompute(p) {
+  const steps = p.template.steps, n = steps.length, ts = now();
+  let r = Math.max(0, Math.min(p.revealedUpTo | 0, n - 1));
+  while (r < n - 1 && stepComplete(steps[r], p.steps[steps[r].id])) r++; // auto-unlock next step
+  p.revealedUpTo = r;
+  steps.forEach((s, i) => {
+    const st = p.steps[s.id];
+    const done = i <= r && stepComplete(s, st);
+    st.status = i > r ? 'locked' : done ? 'done' : 'active';
+    if (done && !st.completedAt) st.completedAt = ts;
+    if (!done) st.completedAt = null;
+  });
+  const all = n > 0 && steps.every(s => p.steps[s.id].status === 'done');
+  if (all && !p.completedAt) p.completedAt = ts;
+  if (!all) p.completedAt = null;
+}
+const doneCount = p => p.template.steps.filter(s => p.steps[s.id].status === 'done').length;
+const statusSig = p => p.revealedUpTo + '|' + p.template.steps.map(s => p.steps[s.id].status).join(',') + '|' + !!p.completedAt;
+
+/* ───────────── Factories & sample ───────────── */
+const blankTodo = () => ({ id: uid('td'), label: '', type: 'checkbox', required: true, options: [] });
+const blankLink = p => ({ id: uid(p), label: '', url: '' });
+const blankStep = () => ({ id: uid('st'), topic: '', note: '', todos: [blankTodo()], docs: [], forms: [] });
+const blankSetup = name => ({ kind: KIND_SETUP, schemaVersion: SCHEMA, id: uid('tpl'), name, updatedAt: now(), steps: [blankStep()] });
+
+function sampleSetup() {
+  const T = (label, type, required, options = []) => ({ label, type, required, options });
+  const L = (label, url) => ({ label, url });
+  return normTemplate({
+    id: 'tpl_sample', name: 'Sample: Client Onboarding',
+    steps: [
+      { topic: 'Kick-off', note: 'Confirm scope and contacts before booking the meeting.',
+        todos: [T('Welcome email sent', 'checkbox', true), T('Meeting format', 'single', true, ['Online', 'On-site', 'Hybrid']), T('Main client contact', 'text', false)],
+        docs: [L('Kick-off checklist', 'https://example.com/docs/kickoff-checklist'), L('Meeting agenda template', 'https://example.com/docs/agenda')],
+        forms: [L('Client intake form', 'https://example.com/forms/intake')] },
+      { topic: 'Requirements', note: 'Capture what the client needs, not how to build it.',
+        todos: [T('Areas covered', 'multi', true, ['Scope', 'Budget', 'Timeline', 'Risks']), T('Priority', 'dropdown', true, ['Low', 'Medium', 'High']), T('Requirements signed off', 'checkbox', true)],
+        docs: [L('Requirements guide', 'https://example.com/docs/requirements'), L('Glossary', 'https://example.com/docs/glossary')],
+        forms: [L('Requirements form', 'https://example.com/forms/requirements')] },
+      { topic: 'Design', note: 'Attach the design file reference and record the review result.',
+        todos: [T('Design file reference', 'text', true), T('Review outcome', 'single', true, ['Approved', 'Approved with changes', 'Needs rework']), T('Accessibility check done', 'checkbox', false)],
+        docs: [L('Design principles', 'https://example.com/docs/design'), L('Accessibility checklist', 'https://example.com/docs/a11y')],
+        forms: [L('Design review form', 'https://example.com/forms/design-review')] },
+      { topic: 'Build & test', note: 'Record the build version you tested.',
+        todos: [T('Test environment', 'dropdown', true, ['Staging', 'Pre-production', 'Local']), T('Tests passed', 'multi', true, ['Unit', 'Integration', 'User acceptance']), T('Build version', 'text', false)],
+        docs: [L('Test plan', 'https://example.com/docs/test-plan'), L('Release checklist', 'https://example.com/docs/release')],
+        forms: [L('Bug report form', 'https://example.com/forms/bug')] },
+      { topic: 'Handover', note: 'Summarise open items for the support team.',
+        todos: [T('Training session held', 'checkbox', true), T('Client satisfaction', 'single', true, ['Very happy', 'Happy', 'Neutral', 'Unhappy']), T('Items handed over', 'multi', false, ['User guide', 'Access details', 'Support contacts'])],
+        docs: [L('Handover guide', 'https://example.com/docs/handover'), L('Support process', 'https://example.com/docs/support')],
+        forms: [L('Feedback form', 'https://example.com/forms/feedback')] }
+    ]
+  });
+}
+function newProject(name, tpl) {
+  const template = normTemplate(clone(tpl)); // frozen copy: later setup edits never touch this project
+  const p = { kind: KIND_PROJECT, schemaVersion: SCHEMA, id: uid('prj'), name, createdAt: now(), updatedAt: now(),
+    completedAt: null, template, revealedUpTo: 0, steps: {} };
+  template.steps.forEach(s => { p.steps[s.id] = { answers: normAnswers(s, {}), note: '', status: 'locked', completedAt: null }; });
+  recompute(p);
+  return p;
+}
+
+/* ───────────── State ───────────── */
+const state = { setups: [], activeSetupId: null, projects: [], ui: { tab: 'setup', theme: 'auto', openProjectId: null } };
+const view = { setupCollapsed: new Set(), expanded: new Set(), previewKey: null, dragIdx: null, focusNext: null };
+
+function loadUi() {
+  const ui = lsRead(LS.ui);
+  if (!isObj(ui)) return;
+  if (ui.tab === 'setup' || ui.tab === 'work') state.ui.tab = ui.tab;
+  if (['auto', 'light', 'dark'].includes(ui.theme)) state.ui.theme = ui.theme;
+  if (typeof ui.openProjectId === 'string') state.ui.openProjectId = ui.openProjectId;
+}
+function loadData() {
+  let bad = 0;
+  const rawSetups = lsRead(LS.setups);
+  state.setups = [];
+  for (const r of arr(rawSetups)) { try { state.setups.push(normTemplate(r)); } catch (e) { bad++; } }
+  dedupeIds(state.setups, 'tpl');
+  const seed = !state.setups.length;
+  if (seed) state.setups = [sampleSetup()];
+  const a = lsRead(LS.active);
+  state.activeSetupId = state.setups.some(s => s.id === a) ? a : state.setups[0].id;
+  state.projects = [];
+  for (const r of arr(lsRead(LS.projects))) { try { state.projects.push(normProject(r)); } catch (e) { bad++; } }
+  dedupeIds(state.projects, 'prj');
+  if (!state.projects.some(p => p.id === state.ui.openProjectId)) state.ui.openProjectId = null;
+  if (bad) toast(`${bad} damaged item(s) in browser storage could not be read and were skipped.`, 'error');
+  if (seed) saveSetups();
+}
+const activeSetup = () => state.setups.find(s => s.id === state.activeSetupId) || state.setups[0];
+const openProjectObj = () => state.projects.find(p => p.id === state.ui.openProjectId) || null;
+
+/* ───────────── Toasts & dialogs ───────────── */
+function toast(msg, type = 'info') {
+  const box = $('#toasts');
+  if (!box) return;
+  const t = h('div', { class: 'toast ' + type, role: type === 'error' ? 'alert' : 'status' },
+    h('span', {}, msg), iconBtn('✕', 'Dismiss', () => t.remove()));
+  box.append(t);
+  setTimeout(() => t.remove(), type === 'error' ? 10000 : 3500);
+}
+function modal({ title, message, input, buttons }) {
+  return new Promise(resolve => {
+    let finished = false;
+    const inp = input ? h('input', { type: 'text', value: input.value || '', autocomplete: 'off', spellcheck: 'false', 'aria-label': input.label }) : null;
+    const finish = v => {
+      if (finished) return;
+      finished = true;
+      try { dlg.close(); } catch (e) { /* ignore */ }
+      dlg.remove();
+      resolve(v);
+    };
+    const pick = b => finish(b.value == null ? null : { button: b.value, value: inp ? inp.value : null });
+    const main = buttons.find(b => /primary|solid/.test(b.cls || ''));
+    const dlg = h('dialog', { class: 'modal', 'aria-label': title },
+      h('h2', {}, title),
+      message ? h('p', {}, message) : null,
+      inp ? h('label', { class: 'field' }, h('span', { class: 'sub' }, input.label), inp) : null,
+      h('div', { class: 'modal-actions' }, buttons.map(b => btn(b.label, () => pick(b), b.cls || ''))));
+    if (inp && main) inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); pick(main); } });
+    dlg.addEventListener('cancel', e => { e.preventDefault(); finish(null); });
+    document.body.append(dlg);
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    if (inp) { inp.focus(); inp.select(); } else (dlg.querySelector('.primary,.solid') || dlg.querySelector('button')).focus();
+  });
+}
+async function confirmBox(title, message, okLabel = 'Delete', cls = 'danger solid') {
+  const r = await modal({ title, message, buttons: [{ label: 'Cancel', value: null }, { label: okLabel, value: 'ok', cls }] });
+  return !!(r && r.button === 'ok');
+}
+async function promptBox(title, label, value, okLabel = 'Save') {
+  const r = await modal({ title, input: { label, value }, buttons: [{ label: 'Cancel', value: null }, { label: okLabel, value: 'ok', cls: 'primary' }] });
+  if (!r) return null;
+  const v = r.value.trim();
+  return v ? v.slice(0, 200) : null;
+}
+
+/* ───────────── Files (download / read) ───────────── */
+function download(name, text) {
+  const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+  const a = h('a', { href: url, download: name });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+async function readJsonFile(file) {
+  if (!file) throw new Error('No file selected.');
+  if (file.size > MAX_FILE) throw new Error('The file is too large (max 5 MB).');
+  let text;
+  try { text = await file.text(); } catch (e) { throw new Error('The file could not be read.'); }
+  try { return JSON.parse(text.replace(/^\uFEFF/, '')); }
+  catch (e) { throw new Error('The file is not valid JSON. It may be damaged or not a Step Workflow file.'); }
+}
+
+/* ───────────── Render core ───────────── */
+function render() {
+  const a = document.activeElement;
+  const fk = a && a.dataset ? a.dataset.fk : null;
+  let s0 = null, s1 = null;
+  try { s0 = a.selectionStart; s1 = a.selectionEnd; } catch (e) { /* not a text field */ }
+  // A done step stays open while you are typing in it.
+  if (a && a.dataset && a.dataset.step && (a.tagName === 'TEXTAREA' || a.type === 'text')) view.expanded.add(a.dataset.step);
+  const y = window.scrollY;
+
+  applyTheme();
+  const tab = state.ui.tab;
+  $('#tab-setup').setAttribute('aria-selected', String(tab === 'setup'));
+  $('#tab-work').setAttribute('aria-selected', String(tab === 'work'));
+  $('#page-setup').hidden = tab !== 'setup';
+  $('#page-work').hidden = tab !== 'work';
+  if (tab === 'setup') renderSetup(); else renderWork();
+  updateSaved();
+
+  window.scrollTo(0, y);
+  const key = view.focusNext || fk;
+  const focusNew = !!view.focusNext;
+  view.focusNext = null;
+  if (key) {
+    const n = document.querySelector(`[data-fk="${CSS.escape(key)}"]`);
+    if (n) {
+      n.focus({ preventScroll: !focusNew });
+      if (!focusNew && s0 != null) { try { n.setSelectionRange(s0, s1); } catch (e) { /* ignore */ } }
+    }
+  }
+}
+function applyTheme() {
+  const t = state.ui.theme;
+  if (t === 'auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', t);
+  $('#themeBtn').textContent = t === 'auto' ? '◐ Auto' : t === 'light' ? '☀ Light' : '☾ Dark';
+}
+
+/* ───────────── PAGE 1: SETUP ───────────── */
+function touchSetup() { const t = activeSetup(); t.updatedAt = now(); saveSetups(); }
+function mutate(fn) { fn(); touchSetup(); render(); }
+
+function renderSetup() {
+  const tpl = activeSetup();
+  const sel = h('select', { id: 'tplSelect', 'aria-label': 'Setup template', value: tpl.id,
+    onchange: e => { state.activeSetupId = e.target.value; saveSetups(); render(); } },
+    state.setups.map(s => h('option', { value: s.id }, s.name)));
+  const bar = h('section', { class: 'card toolbar' },
+    h('div', { class: 'row wrap' },
+      h('label', { class: 'lbl', for: 'tplSelect' }, 'Setup'), sel,
+      h('div', { class: 'btn-group' },
+        btn('New', newSetup), btn('Duplicate', dupSetup), btn('Rename', renameSetup), btn('Delete', deleteSetup, 'danger'))),
+    h('div', { class: 'row wrap between' },
+      h('div', { class: 'btn-group' },
+        btn('⬇ Export setup', exportSetup), btn('⬆ Import setup', () => $('#fileSetup').click())),
+      h('span', { class: 'saved', id: 'savedSetup', 'aria-live': 'polite' }, savedText(lastSetupSaved))),
+    h('p', { class: 'hint' }, 'Every change saves automatically in this browser. Projects already started keep their own copy of the setup, so edits here only affect new projects.'));
+
+  const steps = tpl.steps.length
+    ? tpl.steps.map((s, i) => stepEditor(tpl, s, i))
+    : h('p', { class: 'card empty' }, 'No steps yet. Add the first one below.');
+  $('#page-setup').replaceChildren(bar, h('div', {}, steps),
+    btn('+ Add step', () => mutate(() => { const s = blankStep(); tpl.steps.push(s); view.focusNext = `s-${s.id}-topic`; }), 'primary add-step'));
+}
+
+function stepEditor(tpl, s, i) {
+  const n = tpl.steps.length;
+  const collapsed = view.setupCollapsed.has(s.id);
+  const card = h('section', { class: 'card step-edit' + (collapsed ? ' collapsed' : ''), 'aria-label': `Step ${i + 1}` });
+
+  // Drag & drop reordering (via the ⠿ handle); up/down buttons work everywhere including touch.
+  const handle = h('span', { class: 'handle', draggable: 'true', title: 'Drag to reorder', 'aria-hidden': 'true' }, '⠿');
+  handle.addEventListener('dragstart', e => {
+    view.dragIdx = i;
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', String(i)); e.dataTransfer.setDragImage(card, 20, 20); } catch (err) { /* ignore */ }
+    card.classList.add('dragging');
+  });
+  handle.addEventListener('dragend', () => {
+    view.dragIdx = null;
+    document.querySelectorAll('.dragging,.drop-target').forEach(x => x.classList.remove('dragging', 'drop-target'));
+  });
+  card.addEventListener('dragover', e => { if (view.dragIdx == null) return; e.preventDefault(); card.classList.add('drop-target'); });
+  card.addEventListener('dragleave', e => { if (!card.contains(e.relatedTarget)) card.classList.remove('drop-target'); });
+  card.addEventListener('drop', e => {
+    if (view.dragIdx == null) return;
+    e.preventDefault();
+    const from = view.dragIdx;
+    view.dragIdx = null;
+    if (from !== i) mutate(() => move(tpl.steps, from, i)); else render();
+  });
+
+  card.append(h('div', { class: 'step-head' },
+    handle,
+    h('span', { class: 'step-num' }, `Step ${i + 1}`),
+    h('input', { type: 'text', class: 'topic-input grow', placeholder: 'Step topic', value: s.topic, autocomplete: 'off',
+      'aria-label': `Step ${i + 1} topic`, dataset: { fk: `s-${s.id}-topic` },
+      oninput: e => { s.topic = e.target.value; touchSetup(); } }),
+    h('div', { class: 'btn-group tight' },
+      iconBtn('↑', 'Move step up', () => mutate(() => move(tpl.steps, i, i - 1)), i === 0),
+      iconBtn('↓', 'Move step down', () => mutate(() => move(tpl.steps, i, i + 1)), i === n - 1),
+      iconBtn(collapsed ? '▸' : '▾', collapsed ? 'Expand step' : 'Collapse step', () => {
+        collapsed ? view.setupCollapsed.delete(s.id) : view.setupCollapsed.add(s.id);
+        render();
+      }),
+      iconBtn('🗑', 'Delete step', async () => {
+        if (await confirmBox('Delete step?', `Delete step ${i + 1} "${s.topic || 'Untitled'}" from this setup?`))
+          mutate(() => tpl.steps.splice(tpl.steps.indexOf(s), 1));
+      }, false, 'danger'))));
+  if (collapsed) return card;
+
+  const section = (title, items, addBtn) => h('div', {},
+    h('div', { class: 'section-title' }, h('h4', {}, title), addBtn), items);
+
+  card.append(h('div', { class: 'step-body' },
+    section('To-do list', s.todos.map((t, j) => todoEditor(s, t, j)),
+      btn('+ Add to-do', () => mutate(() => { const t = blankTodo(); s.todos.push(t); view.focusNext = `t-${t.id}-label`; }), 'small')),
+    section('Documentation links', s.docs.map((l, j) => linkEditor(s.docs, l, j)),
+      btn('+ Add link', () => mutate(() => { const l = blankLink('dl'); s.docs.push(l); view.focusNext = `l-${l.id}-label`; }), 'small')),
+    section('Loaded forms', s.forms.map((l, j) => linkEditor(s.forms, l, j)),
+      btn('+ Add form', () => mutate(() => { const l = blankLink('fl'); s.forms.push(l); view.focusNext = `l-${l.id}-label`; }), 'small')),
+    h('label', { class: 'field' },
+      h('span', { class: 'sub' }, 'Default note (optional, shown as a hint on the Work page)'),
+      h('textarea', { rows: 2, value: s.note, placeholder: 'Instructions for this step…', dataset: { fk: `s-${s.id}-note` },
+        oninput: e => { s.note = e.target.value; touchSetup(); } }))));
+  return card;
+}
+
+function todoEditor(s, t, j) {
+  const n = s.todos.length;
+  const mark = k => t.type === 'multi' ? '☐' : t.type === 'single' ? '◯' : `${k + 1}.`;
+  return h('div', { class: 'todo-edit' },
+    h('div', { class: 'todo-main' },
+      h('input', { type: 'text', placeholder: 'To-do or question', value: t.label, autocomplete: 'off', 'aria-label': 'To-do label',
+        dataset: { fk: `t-${t.id}-label` }, oninput: e => { t.label = e.target.value; touchSetup(); } }),
+      h('select', { 'aria-label': 'Answer type', value: t.type, onchange: e => mutate(() => {
+        t.type = e.target.value;
+        if (isChoice(t.type) && !t.options.length) t.options = ['Option 1', 'Option 2'];
+      }) }, Object.entries(TYPES).map(([k, v]) => h('option', { value: k }, v))),
+      h('label', { class: 'req' },
+        h('input', { type: 'checkbox', checked: t.required, onchange: e => { t.required = e.target.checked; touchSetup(); } }), 'Required'),
+      h('div', { class: 'btn-group tight' },
+        iconBtn('↑', 'Move to-do up', () => mutate(() => move(s.todos, j, j - 1)), j === 0),
+        iconBtn('↓', 'Move to-do down', () => mutate(() => move(s.todos, j, j + 1)), j === n - 1),
+        iconBtn('🗑', 'Delete to-do', () => mutate(() => s.todos.splice(j, 1)), false, 'danger'))),
+    isChoice(t.type) ? h('div', { class: 'options' },
+      t.options.map((o, k) => h('div', { class: 'opt' },
+        h('span', { class: 'opt-mark', 'aria-hidden': 'true' }, mark(k)),
+        h('input', { type: 'text', value: o, placeholder: `Option ${k + 1}`, autocomplete: 'off', 'aria-label': `Option ${k + 1}`,
+          dataset: { fk: `o-${t.id}-${k}` }, oninput: e => { t.options[k] = e.target.value; touchSetup(); } }),
+        iconBtn('✕', 'Remove option', () => mutate(() => t.options.splice(k, 1)), false, 'danger'))),
+      h('div', {}, btn('+ Option', () => mutate(() => { t.options.push(''); view.focusNext = `o-${t.id}-${t.options.length - 1}`; }), 'small'))) : null);
+}
+
+function linkEditor(list, l, j) {
+  const bad = l.url.trim() && !safeHref(l.url);
+  return h('div', { class: 'link-edit' },
+    h('input', { type: 'text', placeholder: 'Label', value: l.label, autocomplete: 'off', 'aria-label': 'Link label',
+      dataset: { fk: `l-${l.id}-label` }, oninput: e => { l.label = e.target.value; touchSetup(); } }),
+    h('input', { type: 'text', placeholder: 'https://… or file path', value: l.url, inputmode: 'url', autocomplete: 'off',
+      spellcheck: 'false', autocapitalize: 'off', 'aria-label': 'Link URL or path', dataset: { fk: `l-${l.id}-url` },
+      oninput: e => { l.url = e.target.value; touchSetup(); }, onchange: () => render() }),
+    iconBtn('🗑', 'Remove link', () => mutate(() => list.splice(j, 1)), false, 'danger'),
+    bad ? h('div', { class: 'link-warn' }, '⚠ This link will not open: only http(s), mailto, file links or relative paths are allowed.') : null);
+}
+
+async function newSetup() {
+  const name = await promptBox('New setup', 'Setup name', 'New setup', 'Create');
+  if (!name) return;
+  const t = blankSetup(name);
+  state.setups.push(t);
+  state.activeSetupId = t.id;
+  saveSetups(); render();
+}
+async function dupSetup() {
+  const src = activeSetup();
+  const name = await promptBox('Duplicate setup', 'Name for the copy', src.name + ' (copy)', 'Duplicate');
+  if (!name) return;
+  const t = clone(src);
+  t.id = uid('tpl'); t.name = name; t.updatedAt = now();
+  state.setups.push(t);
+  state.activeSetupId = t.id;
+  saveSetups(); render();
+}
+async function renameSetup() {
+  const t = activeSetup();
+  const name = await promptBox('Rename setup', 'Setup name', t.name);
+  if (!name) return;
+  t.name = name;
+  touchSetup(); render();
+}
+async function deleteSetup() {
+  const t = activeSetup();
+  if (!await confirmBox('Delete setup?', `Delete the setup "${t.name}"? Projects already created from it are not affected.`)) return;
+  state.setups = state.setups.filter(x => x !== t);
+  if (!state.setups.length) state.setups.push(blankSetup('My setup'));
+  state.activeSetupId = state.setups[0].id;
+  saveSetups(); render();
+  toast(`Deleted setup "${t.name}".`);
+}
+function exportSetup() {
+  const t = activeSetup();
+  const out = normTemplate(clone(t)); // clean copy (drops empty options etc.)
+  out.updatedAt = t.updatedAt;
+  out.exportedAt = now();
+  const name = fileSafe(t.name) + '.setup.json';
+  download(name, JSON.stringify(out, null, 2));
+  toast(`Exported "${name}".`, 'ok');
+}
+async function importSetupFile(file) {
+  try {
+    const t = normTemplate(await readJsonFile(file));
+    const cur = activeSetup();
+    const r = await modal({
+      title: 'Import setup',
+      message: `File: "${t.name}" — ${t.steps.length} step(s).\n\nReplace the current setup "${cur.name}" with it, or add it as a new setup?`,
+      buttons: [{ label: 'Cancel', value: null }, { label: 'Add as new', value: 'new' }, { label: 'Replace current', value: 'replace', cls: 'danger solid' }]
+    });
+    if (!r) return;
+    if (r.button === 'replace') {
+      t.id = cur.id;
+      state.setups[state.setups.indexOf(cur)] = t;
+    } else {
+      if (state.setups.some(s => s.id === t.id)) t.id = uid('tpl');
+      state.setups.push(t);
+    }
+    t.updatedAt = now();
+    state.activeSetupId = t.id;
+    saveSetups(); render();
+    toast(`Imported "${t.name}".`, 'ok');
+  } catch (e) {
+    toast('Could not import setup: ' + e.message, 'error');
+  }
+}
+
+/* ───────────── PAGE 2: WORK ───────────── */
+function renderWork() {
+  const p = openProjectObj();
+  $('#page-work').replaceChildren(...(p ? projectView(p) : workHome()));
+}
+
+function workHome() {
+  const nameIn = h('input', { type: 'text', id: 'npName', placeholder: 'e.g. ACME onboarding', autocomplete: 'off', dataset: { fk: 'np-name' } });
+  const tplSel = h('select', { id: 'npTpl', value: state.activeSetupId },
+    state.setups.map(s => h('option', { value: s.id }, `${s.name} (${s.steps.length} steps)`)));
+  const create = () => {
+    const name = nameIn.value.trim().slice(0, 200);
+    if (!name) { toast('Enter a project name.', 'error'); nameIn.focus(); return; }
+    const tpl = state.setups.find(s => s.id === tplSel.value);
+    if (!tpl) { toast('Choose a setup template.', 'error'); return; }
+    if (!tpl.steps.length) { toast('That setup has no steps yet. Add steps on the Setup page first.', 'error'); return; }
+    const p = newProject(name, tpl);
+    state.projects.push(p);
+    saveProjects();
+    openProject(p.id);
+  };
+  nameIn.addEventListener('keydown', e => { if (e.key === 'Enter') create(); });
+
+  const projects = [...state.projects].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+  return [
+    h('section', { class: 'card' },
+      h('div', { class: 'row wrap between' }, h('h2', {}, 'New project'), btn('📂 Open project file', () => $('#fileProject').click())),
+      h('div', { class: 'np-grid' },
+        h('label', { class: 'field', for: 'npName' }, h('span', { class: 'sub' }, 'Project name'), nameIn),
+        h('label', { class: 'field', for: 'npTpl' }, h('span', { class: 'sub' }, 'Setup template'), tplSel),
+        btn('Create project', create, 'primary'))),
+    h('section', { class: 'card' },
+      h('h2', {}, `Projects in this browser (${projects.length})`),
+      projects.length
+        ? h('ul', { class: 'proj-list' }, projects.map(projectRow))
+        : h('p', { class: 'empty' }, 'No projects yet. Create one above, or open a saved project file.'))
+  ];
+}
+
+function projectRow(p) {
+  const n = p.template.steps.length, d = doneCount(p);
+  const bar = h('i', {});
+  bar.style.width = (n ? Math.round(d / n * 100) : 0) + '%';
+  return h('li', { class: 'proj-row' },
+    h('div', { class: 'proj-info' },
+      h('button', { class: 'linklike', type: 'button', onclick: () => openProject(p.id) }, p.name),
+      p.completedAt ? h('span', { class: 'badge' }, 'Complete') : null,
+      h('div', { class: 'meta' }, p.template.name, ' · ', h('span', { class: 'mini', 'aria-hidden': 'true' }, bar), `${d}/${n}`,
+        ' · Updated ', fmtDateTime(p.updatedAt))),
+    h('div', { class: 'btn-group' },
+      btn('Open', () => openProject(p.id), 'small primary'),
+      btn('Rename', () => renameProject(p), 'small'),
+      btn('Duplicate', () => duplicateProject(p), 'small'),
+      btn('Delete', () => deleteProject(p), 'small danger')));
+}
+
+function projectView(p) {
+  const steps = p.template.steps, n = steps.length, r = p.revealedUpTo, d = doneCount(p);
+  const fill = h('div', {});
+  fill.style.width = Math.round(d / n * 100) + '%';
+  const out = [h('section', { class: 'card' },
+    h('div', { class: 'row wrap between' },
+      btn('← Projects', closeProject, 'ghost'),
+      h('div', { class: 'btn-group' },
+        btn('💾 Save project', () => saveProjectFile(p), 'primary'),
+        btn('📂 Open project file', () => $('#fileProject').click()),
+        btn('Rename', () => renameProject(p)))),
+    h('h2', { class: 'proj-title' }, p.name),
+    h('div', { class: 'meta' }, `Setup: ${p.template.name} · Started ${fmtDateTime(p.createdAt)} · `,
+      h('span', { class: 'saved', id: 'savedWork', 'aria-live': 'polite' }, savedText(lastProjectSaved))),
+    h('div', { class: 'progress', role: 'progressbar', 'aria-label': 'Project progress', 'aria-valuemin': 0, 'aria-valuemax': n, 'aria-valuenow': d }, fill),
+    h('div', { class: 'progress-label' }, `Step ${d} of ${n} complete`))];
+
+  if (p.completedAt) out.push(h('div', { class: 'complete', role: 'status' },
+    h('strong', {}, '🎉 Project complete'), `Finished ${fmtDateTime(p.completedAt)}`));
+
+  for (let i = 0; i <= r; i++) out.push(stepCard(p, i, false));
+  if (r < n - 1) {
+    const key = p.id + ':' + r, open = view.previewKey === key;
+    out.push(h('div', { class: 'reveal' },
+      h('button', { class: 'plus', type: 'button', 'aria-expanded': String(open),
+        'aria-label': open ? 'Hide next step preview' : 'Preview next step', title: open ? 'Hide preview' : 'Preview next step',
+        onclick: () => { view.previewKey = open ? null : key; render(); } }, open ? '−' : '+'),
+      h('span', { class: 'hint' }, open
+        ? `Preview of step ${r + 2} — it unlocks when step ${r + 1} is complete.`
+        : `Step ${r + 2} of ${n} unlocks when step ${r + 1} is complete.`)));
+    if (open) out.push(stepCard(p, r + 1, true));
+  }
+  return out;
+}
+
+function tick(done) {
+  // Display-only status box: not clickable, ticks itself from the to-do answers.
+  return h('span', { class: 'tick' + (done ? ' on' : ''), role: 'checkbox', 'aria-checked': String(done), 'aria-disabled': 'true',
+    'aria-label': done ? 'Step complete' : 'Step not complete', title: 'Ticks automatically when all required to-do items are done' }, '✓');
+}
+
+function stepCard(p, i, preview) {
+  const steps = p.template.steps, s = steps[i], st = p.steps[s.id];
+  const done = st.status === 'done';
+  if (done && !preview && !view.expanded.has(s.id)) {
+    return h('button', { class: 'card step-line', type: 'button', 'aria-expanded': 'false', title: 'Click to expand and edit',
+      onclick: () => { view.expanded.add(s.id); render(); } },
+      tick(true), h('span', { class: 'step-num' }, `${i + 1}.`), h('span', { class: 'line-topic' }, s.topic || 'Untitled step'),
+      h('span', { class: 'meta' }, st.completedAt ? `Done ${fmtTime(st.completedAt)}` : 'Done'), h('span', { class: 'chev', 'aria-hidden': 'true' }, '▸'));
+  }
+  const hasReq = s.todos.some(t => t.required);
+  return h('section', { class: 'card step' + (preview ? ' preview' : '') + (st.status === 'active' ? ' active' : ''),
+      'aria-label': `Step ${i + 1}: ${s.topic || 'Untitled step'}` + (preview ? ' (preview, locked)' : '') },
+    h('div', { class: 'step-head' },
+      tick(done && !preview),
+      h('div', { class: 'step-titles' },
+        h('div', { class: 'step-num' }, `Step ${i + 1} of ${steps.length}` + (preview ? ' · Preview (locked)' : done ? ' · Done' : '')),
+        h('h3', {}, s.topic || 'Untitled step')),
+      done && !preview ? btn('Collapse', () => { view.expanded.delete(s.id); render(); }, 'small ghost') : null),
+    h('div', { class: 'step-body' },
+      s.todos.length
+        ? h('div', { class: 'todos' }, s.todos.map(t => todoView(p, s, t, preview)))
+        : h('p', { class: 'meta' }, 'No to-do items in this step.'),
+      hasReq ? h('div', { class: 'meta' }, h('span', { class: 'req-mark' }, '*'), ' required') : null,
+      (s.docs.length || s.forms.length) ? h('div', { class: 'links-grid' },
+        s.docs.length ? h('div', { class: 'links' }, h('h4', {}, '📄 Documentation'), h('ul', {}, s.docs.map(linkView))) : null,
+        s.forms.length ? h('div', { class: 'links' }, h('h4', {}, '📝 Loaded forms'), h('ul', {}, s.forms.map(linkView))) : null) : null,
+      h('label', { class: 'field' },
+        h('span', { class: 'sub' }, 'Notes'),
+        h('textarea', { rows: 3, value: st.note, disabled: preview, autocomplete: 'off',
+          placeholder: s.note || 'Write notes for this step…', dataset: { fk: `n-${p.id}-${s.id}`, step: s.id },
+          oninput: e => { st.note = e.target.value; p.updatedAt = now(); saveProjects(); } }))));
+}
+
+function todoView(p, s, t, disabled) {
+  const st = p.steps[s.id];
+  const a = st.answers[t.id];
+  const label = t.label || '(untitled)';
+  const req = t.required ? h('span', { class: 'req-mark', title: 'Required' }, ' *') : null;
+  const cls = 'todo' + (todoDone(t, a) ? ' is-done' : '');
+  const set = v => { st.answers[t.id] = v; answerChanged(p); };
+  const noOpts = t.options.length ? null : h('div', { class: 'meta' }, '(no options defined)');
+
+  switch (t.type) {
+    case 'checkbox':
+      return h('div', { class: cls },
+        h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: a === true, disabled, onchange: e => set(e.target.checked) }),
+          h('span', {}, label, req)));
+    case 'multi': {
+      const cur = Array.isArray(a) ? a : [];
+      return h('fieldset', { class: cls, disabled }, h('legend', {}, label, req),
+        h('div', {}, t.options.map(o => h('label', { class: 'check' },
+          h('input', { type: 'checkbox', checked: cur.includes(o), onchange: e => {
+            const sel = new Set(arr(st.answers[t.id]));
+            e.target.checked ? sel.add(o) : sel.delete(o);
+            set(t.options.filter(x => sel.has(x)));
+          } }), h('span', {}, o))), noOpts));
+    }
+    case 'single':
+      return h('fieldset', { class: cls, disabled }, h('legend', {}, label, req),
+        h('div', {}, t.options.map(o => h('label', { class: 'check' },
+          h('input', { type: 'radio', name: `r-${p.id}-${t.id}`, checked: a === o, onchange: () => set(o) }), h('span', {}, o))),
+          noOpts, a && !disabled ? btn('Clear choice', () => set(''), 'small ghost') : null));
+    case 'dropdown':
+      return h('div', { class: cls },
+        h('label', { class: 'field' }, h('span', { class: 'q' }, label, req),
+          h('select', { value: a || '', disabled, onchange: e => set(e.target.value) },
+            h('option', { value: '' }, '— Select —'), t.options.map(o => h('option', { value: o }, o)))));
+    default: { // short text
+      const inp = h('input', { type: 'text', value: a || '', disabled, autocomplete: 'off', placeholder: 'Your answer',
+        dataset: { fk: `a-${p.id}-${t.id}`, step: s.id } });
+      // Don't redraw while an input method (IME) is composing; finish on compositionend.
+      inp.addEventListener('input', e => { if (!e.isComposing) textChanged(p, s, t, inp); else { st.answers[t.id] = inp.value; } });
+      inp.addEventListener('compositionend', () => textChanged(p, s, t, inp));
+      return h('div', { class: cls }, h('label', { class: 'field' }, h('span', { class: 'q' }, label, req), inp));
+    }
+  }
+}
+
+function answerChanged(p) {
+  recompute(p);
+  p.updatedAt = now();
+  saveProjects();
+  render();
+}
+function textChanged(p, s, t, inp) {
+  const st = p.steps[s.id];
+  st.answers[t.id] = inp.value.slice(0, 5000);
+  const before = statusSig(p);
+  recompute(p);
+  p.updatedAt = now();
+  saveProjects();
+  if (statusSig(p) !== before) render();
+  else inp.closest('.todo').classList.toggle('is-done', todoDone(t, st.answers[t.id]));
+}
+
+function openProject(id, scrollToCurrent = true) {
+  state.ui.openProjectId = id;
+  state.ui.tab = 'work';
+  view.expanded.clear();
+  view.previewKey = null;
+  saveUi();
+  render();
+  window.scrollTo(0, 0);
+  if (scrollToCurrent) {
+    const cur = document.querySelector('#page-work .step.active');
+    if (cur && cur.getBoundingClientRect().top > window.innerHeight * 0.6) cur.scrollIntoView({ block: 'start' });
+  }
+}
+function closeProject() {
+  state.ui.openProjectId = null;
+  saveUi(); render(); window.scrollTo(0, 0);
+}
+async function renameProject(p) {
+  const name = await promptBox('Rename project', 'Project name', p.name);
+  if (!name) return;
+  p.name = name; p.updatedAt = now();
+  saveProjects(); render();
+}
+function duplicateProject(p) {
+  const c = clone(p);
+  c.id = uid('prj'); c.name = p.name + ' (copy)'; c.updatedAt = now();
+  state.projects.push(c);
+  saveProjects(); render();
+  toast(`Duplicated as "${c.name}".`, 'ok');
+}
+async function deleteProject(p) {
+  if (!await confirmBox('Delete project?', `Delete "${p.name}" from this browser? Saved project files are not affected. This cannot be undone.`)) return;
+  state.projects = state.projects.filter(x => x !== p);
+  if (state.ui.openProjectId === p.id) state.ui.openProjectId = null;
+  saveProjects(); saveUi(); render();
+  toast(`Deleted "${p.name}".`);
+}
+function projectFileData(p) {
+  return {
+    kind: KIND_PROJECT, schemaVersion: SCHEMA, app: 'Step Workflow', savedAt: now(),
+    id: p.id, name: p.name, createdAt: p.createdAt, updatedAt: p.updatedAt, completedAt: p.completedAt,
+    revealedUpTo: p.revealedUpTo, template: clone(p.template), steps: clone(p.steps)
+  };
+}
+async function saveProjectFile(p) {
+  const r = await modal({
+    title: 'Save project',
+    message: 'The file downloads to your computer. It contains a full copy of the setup, all answers and notes, so it opens on any computer.',
+    input: { label: 'File name', value: fileSafe(p.name) + '.json' },
+    buttons: [{ label: 'Cancel', value: null }, { label: 'Download', value: 'ok', cls: 'primary' }]
+  });
+  if (!r) return;
+  const name = fileSafe(r.value.trim().replace(/\.json$/i, '')) + '.json';
+  download(name, JSON.stringify(projectFileData(p), null, 2));
+  toast(`Saved "${name}" to your downloads.`, 'ok');
+}
+async function openProjectFile(file) {
+  try {
+    const p = normProject(await readJsonFile(file));
+    const existing = state.projects.find(x => x.id === p.id);
+    if (existing) {
+      const r = await modal({
+        title: 'Project already in this browser',
+        message: `"${existing.name}" (updated ${fmtDateTime(existing.updatedAt)}) is already stored here.\nThe file version was updated ${fmtDateTime(p.updatedAt)}.`,
+        buttons: [{ label: 'Cancel', value: null }, { label: 'Keep both', value: 'both' }, { label: 'Replace with file', value: 'replace', cls: 'danger solid' }]
+      });
+      if (!r) return;
+      if (r.button === 'both') { p.id = uid('prj'); p.name += ' (from file)'; state.projects.push(p); }
+      else state.projects[state.projects.indexOf(existing)] = p;
+    } else {
+      state.projects.push(p);
+    }
+    saveProjects();
+    openProject(p.id);
+    const n = p.template.steps.length;
+    toast(p.completedAt ? `Opened "${p.name}" — project is complete.` : `Opened "${p.name}" — continuing at step ${p.revealedUpTo + 1} of ${n}.`, 'ok');
+  } catch (e) {
+    toast('Could not open project file: ' + e.message, 'error');
+  }
+}
+
+/* ───────────── Global wiring ───────────── */
+async function clearAll() {
+  if (!await confirmBox('Clear all data?', 'Delete every setup and project stored in this browser? Export setups and save project files first if you want to keep them. This cannot be undone.', 'Delete everything')) return;
+  try { Object.values(LS).forEach(k => localStorage.removeItem(k)); } catch (e) { /* ignore */ }
+  state.projects = [];
+  state.setups = [sampleSetup()];
+  state.activeSetupId = state.setups[0].id;
+  state.ui.openProjectId = null;
+  view.expanded.clear();
+  saveSetups(); saveProjects(); saveUi(); render();
+  toast('All data in this browser was cleared. The sample setup was restored.', 'ok');
+}
+
+function init() {
+  $('#tab-setup').addEventListener('click', () => { state.ui.tab = 'setup'; saveUi(); render(); window.scrollTo(0, 0); });
+  $('#tab-work').addEventListener('click', () => { state.ui.tab = 'work'; saveUi(); render(); window.scrollTo(0, 0); });
+  $('#themeBtn').addEventListener('click', () => {
+    state.ui.theme = { auto: 'light', light: 'dark', dark: 'auto' }[state.ui.theme];
+    saveUi(); applyTheme();
+  });
+  $('#clearAll').addEventListener('click', clearAll);
+  $('#fileSetup').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) importSetupFile(f); });
+  $('#fileProject').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) openProjectFile(f); });
+  // Keep several open tabs of this app in sync.
+  window.addEventListener('storage', e => {
+    if (e.key !== LS.setups && e.key !== LS.projects && e.key !== LS.active) return;
+    loadData(); render();
+  });
+  window.addEventListener('error', e => toast('Something went wrong: ' + (e.message || 'unknown error'), 'error'));
+  window.addEventListener('unhandledrejection', e => toast('Something went wrong: ' + ((e.reason && e.reason.message) || 'unknown error'), 'error'));
+
+  loadUi();
+  loadData();
+  render();
+}
+init();
+})();
+</script>
+</body>
+</html>
