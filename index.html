@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Privacy: this page may not load or send anything over the network. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; form-action 'none'; base-uri 'none'">
-<meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="light dark">
 <title>Step Workflow</title>
 <link rel="icon" href="data:,">
@@ -233,7 +232,7 @@ dialog.modal p { margin: 10px 0; white-space: pre-line; overflow-wrap: anywhere;
   <div id="page-work" role="tabpanel" aria-labelledby="tab-work" hidden></div>
 </main>
 <footer class="footer">
-  <span>🔒 Private: this app makes no network requests. Data stays in this browser and in files you download. Links open in a new tab without sending this page's address or any of your answers.</span>
+  <span>🔒 Private: this app makes no network requests. Data stays in this browser and in files you download. Links simply open your other programs (SharePoint, company pages…) in a new tab; your answers are never added to them.</span>
   <button class="btn small danger" id="clearAll">Clear all data in this browser</button>
 </footer>
 <div id="toasts" aria-live="polite"></div>
@@ -299,22 +298,27 @@ const btn = (label, fn, cls = '', attrs = {}) => h('button', Object.assign({ cla
 const iconBtn = (label, title, fn, disabled = false, cls = '') =>
   h('button', { class: 'icon-btn ' + cls, type: 'button', title, 'aria-label': title, disabled, onclick: fn }, label);
 
-/* Only allow link types that cannot run code: http(s), mailto, file, or relative paths. */
+/* Links are plain shortcuts to other programs (SharePoint, intranet pages, Office apps, file shares).
+   Any link type is allowed except ones that would run code inside this app. */
+const BLOCKED_SCHEMES = ['javascript:', 'data:', 'vbscript:', 'blob:'];
 function safeHref(u) {
   u = str(u).trim();
   if (!u || /[\u0000-\u001f]/.test(u)) return null;
-  if (/^[a-zA-Z]:[\\/]/.test(u)) u = 'file:///' + u.replace(/\\/g, '/');      // C:\docs\a.pdf
-  else if (/^\\\\/.test(u)) u = 'file:' + u.replace(/\\/g, '/');               // \\server\share
-  let url;
-  try { url = new URL(u, document.baseURI); } catch (e) { return null; }
-  return ['http:', 'https:', 'mailto:', 'file:'].includes(url.protocol) ? url.href : null;
+  if (/^[a-zA-Z]:[\\/]/.test(u)) return 'file:///' + u.replace(/\\/g, '/');      // C:\docs\a.pdf
+  if (/^\\\\/.test(u)) return 'file:' + u.replace(/\\/g, '/');                  // \\server\share
+  const scheme = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(u);
+  if (scheme) {                                                        // https:, ms-word:, onenote:, mailto: …
+    try { if (BLOCKED_SCHEMES.includes(new URL(u).protocol)) return null; } catch (e) { /* keep as typed */ }
+    return BLOCKED_SCHEMES.includes(scheme[1].toLowerCase() + ':') ? null : u;
+  }
+  if (/^[^\s/]+\.[^\s/]+(\/|$)/.test(u) && !/\.html?$|\.pdf$|\.docx?$|\.xlsx?$/i.test(u.split('/')[0])) return 'https://' + u; // company.sharepoint.com/sites/x
+  try { return new URL(u, document.baseURI).href; } catch (e) { return null; } // relative path next to this file
 }
 function linkView(l) {
   const href = safeHref(l.url);
   const label = l.label || l.url || '(no link)';
-  if (!href) return h('li', {}, h('span', { class: 'link-blocked', title: 'This link type is not allowed or the URL is empty' }, label));
-  // noopener + noreferrer: the opened site gets no referrer and no access back to this page.
-  return h('li', {}, h('a', { href, target: '_blank', rel: 'noopener noreferrer', referrerpolicy: 'no-referrer' }, label, ' ↗'));
+  if (!href) return h('li', {}, h('span', { class: 'link-blocked', title: 'This link is empty or not allowed' }, label));
+  return h('li', {}, h('a', { href, target: '_blank', rel: 'noopener' }, label, ' ↗'));
 }
 
 /* ───────────── Storage (always try/catch) ───────────── */
@@ -776,11 +780,11 @@ function linkEditor(list, l, j) {
   return h('div', { class: 'link-edit' },
     h('input', { type: 'text', placeholder: 'Label', value: l.label, autocomplete: 'off', 'aria-label': 'Link label',
       dataset: { fk: `l-${l.id}-label` }, oninput: e => { l.label = e.target.value; touchSetup(); } }),
-    h('input', { type: 'text', placeholder: 'https://… or file path', value: l.url, inputmode: 'url', autocomplete: 'off',
+    h('input', { type: 'text', placeholder: 'https://company.sharepoint.com/… or \\\\server\\file', value: l.url, inputmode: 'url', autocomplete: 'off',
       spellcheck: 'false', autocapitalize: 'off', 'aria-label': 'Link URL or path', dataset: { fk: `l-${l.id}-url` },
       oninput: e => { l.url = e.target.value; touchSetup(); }, onchange: () => render() }),
     iconBtn('🗑', 'Remove link', () => mutate(() => list.splice(j, 1)), false, 'danger'),
-    bad ? h('div', { class: 'link-warn' }, '⚠ This link will not open: only http(s), mailto, file links or relative paths are allowed.') : null);
+    bad ? h('div', { class: 'link-warn' }, '⚠ This link will not open: javascript:, data: and similar links are not allowed.') : null);
 }
 
 async function newSetup() {
