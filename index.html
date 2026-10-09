@@ -130,7 +130,6 @@ input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; accent-
 .opt { display: flex; align-items: center; gap: 6px; }
 .opt-mark { color: var(--muted); width: 22px; text-align: center; flex: none; font-size: .85rem; }
 .link-edit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) auto; gap: 8px; align-items: center; margin-bottom: 6px; }
-.link-warn { grid-column: 1 / -1; color: var(--danger); font-size: .8rem; margin-top: -2px; }
 .add-step { width: 100%; padding: 10px; }
 
 /* Work page */
@@ -174,7 +173,6 @@ input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; accent-
 .links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .links ul { margin: 0; padding-left: 18px; }
 .links li { margin: 2px 0; overflow-wrap: anywhere; }
-.link-blocked { color: var(--muted); text-decoration: line-through; }
 .step.preview { opacity: .55; border-style: dashed; box-shadow: none; }
 .reveal { display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; }
 .plus {
@@ -298,27 +296,9 @@ const btn = (label, fn, cls = '', attrs = {}) => h('button', Object.assign({ cla
 const iconBtn = (label, title, fn, disabled = false, cls = '') =>
   h('button', { class: 'icon-btn ' + cls, type: 'button', title, 'aria-label': title, disabled, onclick: fn }, label);
 
-/* Links are plain shortcuts to other programs (SharePoint, intranet pages, Office apps, file shares).
-   Any link type is allowed except ones that would run code inside this app. */
-const BLOCKED_SCHEMES = ['javascript:', 'data:', 'vbscript:', 'blob:'];
-function safeHref(u) {
-  u = str(u).trim();
-  if (!u || /[\u0000-\u001f]/.test(u)) return null;
-  if (/^[a-zA-Z]:[\\/]/.test(u)) return 'file:///' + u.replace(/\\/g, '/');      // C:\docs\a.pdf
-  if (/^\\\\/.test(u)) return 'file:' + u.replace(/\\/g, '/');                  // \\server\share
-  const scheme = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(u);
-  if (scheme) {                                                        // https:, ms-word:, onenote:, mailto: …
-    try { if (BLOCKED_SCHEMES.includes(new URL(u).protocol)) return null; } catch (e) { /* keep as typed */ }
-    return BLOCKED_SCHEMES.includes(scheme[1].toLowerCase() + ':') ? null : u;
-  }
-  if (/^[^\s/]+\.[^\s/]+(\/|$)/.test(u) && !/\.html?$|\.pdf$|\.docx?$|\.xlsx?$/i.test(u.split('/')[0])) return 'https://' + u; // company.sharepoint.com/sites/x
-  try { return new URL(u, document.baseURI).href; } catch (e) { return null; } // relative path next to this file
-}
 function linkView(l) {
-  const href = safeHref(l.url);
-  const label = l.label || l.url || '(no link)';
-  if (!href) return h('li', {}, h('span', { class: 'link-blocked', title: 'This link is empty or not allowed' }, label));
-  return h('li', {}, h('a', { href, target: '_blank', rel: 'noopener' }, label, ' ↗'));
+  // Links are used exactly as typed in Setup.
+  return h('li', {}, l.url ? h('a', { href: l.url, target: '_blank' }, l.label || l.url, ' ↗') : h('span', {}, l.label || '(no link)'));
 }
 
 /* ───────────── Storage (always try/catch) ───────────── */
@@ -776,15 +756,13 @@ function todoEditor(s, t, j) {
 }
 
 function linkEditor(list, l, j) {
-  const bad = l.url.trim() && !safeHref(l.url);
   return h('div', { class: 'link-edit' },
     h('input', { type: 'text', placeholder: 'Label', value: l.label, autocomplete: 'off', 'aria-label': 'Link label',
       dataset: { fk: `l-${l.id}-label` }, oninput: e => { l.label = e.target.value; touchSetup(); } }),
     h('input', { type: 'text', placeholder: 'https://company.sharepoint.com/… or \\\\server\\file', value: l.url, inputmode: 'url', autocomplete: 'off',
       spellcheck: 'false', autocapitalize: 'off', 'aria-label': 'Link URL or path', dataset: { fk: `l-${l.id}-url` },
-      oninput: e => { l.url = e.target.value; touchSetup(); }, onchange: () => render() }),
-    iconBtn('🗑', 'Remove link', () => mutate(() => list.splice(j, 1)), false, 'danger'),
-    bad ? h('div', { class: 'link-warn' }, '⚠ This link will not open: javascript:, data: and similar links are not allowed.') : null);
+      oninput: e => { l.url = e.target.value; touchSetup(); } }),
+    iconBtn('🗑', 'Remove link', () => mutate(() => list.splice(j, 1)), false, 'danger'));
 }
 
 async function newSetup() {
