@@ -199,6 +199,7 @@ input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; accent-
 .sum-answers .a.none { color: var(--muted); font-weight: 400; }
 .sum-note { margin: 10px 0 0; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 8px 8px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .sum-note.none { border-left-color: var(--border); color: var(--muted); }
+.multitext { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
 .toggle { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; cursor: pointer; white-space: nowrap; }
 
 /* Toasts + modal */
@@ -276,9 +277,10 @@ const SCHEMA = 1;
 const KIND_SETUP = 'step-workflow-setup';
 const KIND_PROJECT = 'step-workflow-project';
 const LS = { setups: 'sw.setups', active: 'sw.activeSetupId', projects: 'sw.projects', ui: 'sw.ui' };
-const TYPES = { checkbox: 'Checkbox', multi: 'Multiple checkboxes', single: 'Single choice', dropdown: 'Dropdown', text: 'Short text' };
+const TYPES = { checkbox: 'Checkbox', multi: 'Multiple checkboxes', single: 'Single choice', dropdown: 'Dropdown', text: 'Short text', multitext: 'Multiple short text' };
 const MAX_FILE = 5 * 1024 * 1024;
 const isChoice = t => t === 'multi' || t === 'single' || t === 'dropdown';
+const hasOptions = t => isChoice(t) || t === 'multitext'; // multitext: options are the labels of its text boxes
 
 const $ = s => document.querySelector(s);
 const now = () => new Date().toISOString();
@@ -417,6 +419,7 @@ function normAnswers(step, raw) {
     if (t.type === 'checkbox') out[t.id] = v === true;
     else if (t.type === 'multi') out[t.id] = Array.isArray(v) ? t.options.filter(o => v.includes(o)) : [];
     else if (t.type === 'text') out[t.id] = str(v, 5000);
+    else if (t.type === 'multitext') out[t.id] = t.options.map((_, k) => str(arr(v)[k], 5000));
     else out[t.id] = (typeof v === 'string' && t.options.includes(v)) ? v : '';
   }
   return out;
@@ -469,6 +472,7 @@ function todoDone(t, a) {
   switch (t.type) {
     case 'checkbox': return a === true;
     case 'multi': return Array.isArray(a) && a.length > 0;
+    case 'multitext': return Array.isArray(a) && a.length > 0 && a.every(x => typeof x === 'string' && x.trim() !== '');
     case 'text': return typeof a === 'string' && a.trim() !== '';
     default: return typeof a === 'string' && a !== '';
   }
@@ -506,7 +510,7 @@ function sampleSetup() {
     id: 'tpl_sample', name: 'Sample: Client Onboarding',
     steps: [
       { topic: 'Kick-off', note: 'Confirm scope and contacts before booking the meeting.',
-        todos: [T('Welcome email sent', 'checkbox', true), T('Meeting format', 'single', true, ['Online', 'On-site', 'Hybrid']), T('Main client contact', 'text', false)],
+        todos: [T('Welcome email sent', 'checkbox', true), T('Meeting format', 'single', true, ['Online', 'On-site', 'Hybrid']), T('Main client contact', 'multitext', false, ['Name', 'Phone', 'Email'])],
         docs: [L('Kick-off checklist', 'https://example.com/docs/kickoff-checklist'), L('Meeting agenda template', 'https://example.com/docs/agenda')],
         forms: [L('Client intake form', 'https://example.com/forms/intake')] },
       { topic: 'Requirements', note: 'Capture what the client needs, not how to build it.',
@@ -761,14 +765,15 @@ function stepEditor(tpl, s, i) {
 
 function todoEditor(s, t, j) {
   const n = s.todos.length;
-  const mark = k => t.type === 'multi' ? '☐' : t.type === 'single' ? '◯' : `${k + 1}.`;
+  const mark = k => t.type === 'multi' ? '☐' : t.type === 'single' ? '◯' : t.type === 'multitext' ? '▭' : `${k + 1}.`;
+  const word = t.type === 'multitext' ? 'Box' : 'Option';
   return h('div', { class: 'todo-edit' },
     h('div', { class: 'todo-main' },
       h('input', { type: 'text', placeholder: 'To-do or question', value: t.label, autocomplete: 'off', 'aria-label': 'To-do label',
         dataset: { fk: `t-${t.id}-label` }, oninput: e => { t.label = e.target.value; touchSetup(); } }),
       h('select', { 'aria-label': 'Answer type', value: t.type, onchange: e => mutate(() => {
         t.type = e.target.value;
-        if (isChoice(t.type) && !t.options.length) t.options = ['Option 1', 'Option 2'];
+        if (hasOptions(t.type) && !t.options.length) t.options = t.type === 'multitext' ? ['Box 1', 'Box 2'] : ['Option 1', 'Option 2'];
       }) }, Object.entries(TYPES).map(([k, v]) => h('option', { value: k }, v))),
       h('label', { class: 'req' },
         h('input', { type: 'checkbox', checked: t.required, onchange: e => { t.required = e.target.checked; touchSetup(); } }), 'Required'),
@@ -776,13 +781,13 @@ function todoEditor(s, t, j) {
         iconBtn('↑', 'Move to-do up', () => mutate(() => move(s.todos, j, j - 1)), j === 0),
         iconBtn('↓', 'Move to-do down', () => mutate(() => move(s.todos, j, j + 1)), j === n - 1),
         iconBtn('🗑', 'Delete to-do', () => mutate(() => s.todos.splice(j, 1)), false, 'danger'))),
-    isChoice(t.type) ? h('div', { class: 'options' },
+    hasOptions(t.type) ? h('div', { class: 'options' },
       t.options.map((o, k) => h('div', { class: 'opt' },
         h('span', { class: 'opt-mark', 'aria-hidden': 'true' }, mark(k)),
-        h('input', { type: 'text', value: o, placeholder: `Option ${k + 1}`, autocomplete: 'off', 'aria-label': `Option ${k + 1}`,
+        h('input', { type: 'text', value: o, placeholder: `${word} ${k + 1} label`, autocomplete: 'off', 'aria-label': `${word} ${k + 1}`,
           dataset: { fk: `o-${t.id}-${k}` }, oninput: e => { t.options[k] = e.target.value; touchSetup(); } }),
-        iconBtn('✕', 'Remove option', () => mutate(() => t.options.splice(k, 1)), false, 'danger'))),
-      h('div', {}, btn('+ Option', () => mutate(() => { t.options.push(''); view.focusNext = `o-${t.id}-${t.options.length - 1}`; }), 'small'))) : null);
+        iconBtn('✕', 'Remove ' + word.toLowerCase(), () => mutate(() => t.options.splice(k, 1)), false, 'danger'))),
+      h('div', {}, btn('+ ' + word, () => mutate(() => { t.options.push(''); view.focusNext = `o-${t.id}-${t.options.length - 1}`; }), 'small'))) : null);
 }
 
 function linkEditor(list, l, j) {
@@ -1002,7 +1007,7 @@ function todoView(p, s, t, disabled) {
   const req = t.required ? h('span', { class: 'req-mark', title: 'Required' }, ' *') : null;
   const cls = 'todo' + (todoDone(t, a) ? ' is-done' : '');
   const set = v => { st.answers[t.id] = v; answerChanged(p); };
-  const noOpts = t.options.length ? null : h('div', { class: 'meta' }, '(no options defined)');
+  const noOpts = t.options.length ? null : h('div', { class: 'meta' }, t.type === 'multitext' ? '(no text boxes defined)' : '(no options defined)');
 
   switch (t.type) {
     case 'checkbox':
@@ -1029,6 +1034,17 @@ function todoView(p, s, t, disabled) {
         h('label', { class: 'field' }, h('span', { class: 'q' }, label, req),
           h('select', { value: a || '', disabled, onchange: e => set(e.target.value) },
             h('option', { value: '' }, '— Select —'), t.options.map(o => h('option', { value: o }, o)))));
+    case 'multitext': {
+      const cur = Array.isArray(a) ? a : [];
+      return h('fieldset', { class: cls, disabled }, h('legend', {}, label, req),
+        h('div', { class: 'multitext' }, t.options.map((o, k) => {
+          const inp = h('input', { type: 'text', value: cur[k] || '', autocomplete: 'off', placeholder: o,
+            dataset: { fk: `a-${p.id}-${t.id}-${k}`, step: s.id } });
+          inp.addEventListener('input', e => { if (!e.isComposing) textChanged(p, s, t, inp, k); else { st.answers[t.id][k] = inp.value; } });
+          inp.addEventListener('compositionend', () => textChanged(p, s, t, inp, k));
+          return h('label', { class: 'field' }, h('span', { class: 'sub' }, o), inp);
+        }), noOpts));
+    }
     default: { // short text
       const inp = h('input', { type: 'text', value: a || '', disabled, autocomplete: 'off', placeholder: 'Your answer',
         dataset: { fk: `a-${p.id}-${t.id}`, step: s.id } });
@@ -1046,9 +1062,10 @@ function answerChanged(p) {
   saveProjects();
   render();
 }
-function textChanged(p, s, t, inp) {
+function textChanged(p, s, t, inp, k = null) {
   const st = p.steps[s.id];
-  st.answers[t.id] = inp.value.slice(0, 5000);
+  if (k == null) st.answers[t.id] = inp.value.slice(0, 5000);
+  else st.answers[t.id][k] = inp.value.slice(0, 5000);
   const before = statusSig(p);
   recompute(p);
   p.updatedAt = now();
@@ -1143,6 +1160,7 @@ function answerText(t, a) {
   switch (t.type) {
     case 'checkbox': return a === true ? '✓ Done' : '✗ Not done';
     case 'multi': return Array.isArray(a) && a.length ? a.join(', ') : '';
+    case 'multitext': return Array.isArray(a) && a.some(x => x.trim()) ? t.options.map((o, k) => `${o}: ${(a[k] || '').trim() || '—'}`).join('\n') : '';
     case 'text': return typeof a === 'string' ? a.trim() : '';
     default: return typeof a === 'string' ? a : '';
   }
@@ -1231,7 +1249,10 @@ function summaryText(p) {
     const st = p.steps[s.id];
     lines.push(`${i + 1}. ${s.topic || 'Untitled step'} — ${stepStatusText(st)}`);
     if (view.summaryAnswers && st.status !== 'locked')
-      s.todos.forEach(t => lines.push(`   - ${t.label || '(untitled)'}: ${answerText(t, st.answers[t.id]) || '—'}`));
+      s.todos.forEach(t => {
+        const a = answerText(t, st.answers[t.id]) || '—';
+        lines.push(`   - ${t.label || '(untitled)'}:` + (a.includes('\n') ? a.split('\n').map(l => '\n       ' + l).join('') : ' ' + a));
+      });
     if (st.note.trim()) {
       lines.push('   Notes:');
       st.note.trim().split(/\r?\n/).forEach(l => lines.push('     ' + l));
