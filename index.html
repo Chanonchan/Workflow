@@ -182,6 +182,25 @@ input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; accent-
 .plus:hover { border-color: var(--accent); color: var(--accent); }
 .footer { max-width: 900px; margin: 8px auto 32px; padding: 0 16px; color: var(--muted); font-size: .8rem; display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
 
+/* Summary page */
+.sum-head h2 { font-size: 1.35rem; overflow-wrap: anywhere; }
+.sum-facts { display: grid; grid-template-columns: max-content 1fr; gap: 2px 14px; margin: 10px 0 0; font-size: .9rem; }
+.sum-facts dt { color: var(--muted); }
+.sum-facts dd { margin: 0; overflow-wrap: anywhere; }
+.sum-step { break-inside: avoid; }
+.sum-step-head { display: flex; align-items: center; gap: 10px; }
+.sum-step-head h3 { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.pill { font-size: .75rem; font-weight: 700; padding: 2px 10px; border-radius: 999px; white-space: nowrap; background: var(--surface-2); color: var(--muted); }
+.pill.done { background: var(--ok-soft); color: var(--ok); }
+.pill.active { background: var(--accent-soft); color: var(--accent); }
+.sum-answers { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: .9rem; }
+.sum-answers li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 10px; padding: 4px 0; border-bottom: 1px dashed var(--border); }
+.sum-answers .a { font-weight: 600; overflow-wrap: anywhere; white-space: pre-wrap; }
+.sum-answers .a.none { color: var(--muted); font-weight: 400; }
+.sum-note { margin: 10px 0 0; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 8px 8px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.sum-note.none { border-left-color: var(--border); color: var(--muted); }
+.toggle { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; cursor: pointer; white-space: nowrap; }
+
 /* Toasts + modal */
 #toasts { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 50; display: grid; gap: 8px; width: min(520px, calc(100% - 32px)); }
 .toast { display: flex; align-items: center; gap: 8px; padding: 10px 8px 10px 14px; border-radius: 10px; background: var(--text); color: var(--bg); box-shadow: 0 6px 20px rgba(0,0,0,.25); font-size: .9rem; }
@@ -196,9 +215,12 @@ dialog.modal p { margin: 10px 0; white-space: pre-line; overflow-wrap: anywhere;
 
 /* Phone */
 @media (max-width: 640px) {
+  .topbar { flex-wrap: wrap; }
+  .tabs { order: 3; width: 100%; }
+  .tab { flex: 1; padding: 6px 8px; }
+  .sum-answers li { grid-template-columns: 1fr; gap: 0; }
   .topbar { padding: 8px 12px; gap: 8px; }
   .brand { font-size: .95rem; }
-  .tab { padding: 6px 12px; }
   .wrap-main { padding: 12px 16px; }
   .todo-main { grid-template-columns: minmax(0, 1fr) auto; }
   .todo-main > input { grid-column: 1 / -1; }
@@ -213,14 +235,21 @@ dialog.modal p { margin: 10px 0; white-space: pre-line; overflow-wrap: anywhere;
   .step-edit .step-head .topic-input { order: 3; flex-basis: 100%; }
   .step-edit .step-head .btn-group { margin-left: auto; }
 }
+@media print {
+  .no-print, .banner, #toasts, dialog { display: none !important; }
+  body { background: #fff; color: #000; }
+  .wrap-main { max-width: none; padding: 0; }
+  .card { box-shadow: none; border-color: #bbb; }
+}
 </style>
 </head>
 <body>
-<header class="topbar">
+<header class="topbar no-print">
   <div class="brand">Step Workflow</div>
   <nav class="tabs" role="tablist" aria-label="Pages">
     <button class="tab" role="tab" id="tab-setup" aria-controls="page-setup">Setup</button>
     <button class="tab" role="tab" id="tab-work" aria-controls="page-work">Work</button>
+    <button class="tab" role="tab" id="tab-summary" aria-controls="page-summary">Summary</button>
   </nav>
   <button class="btn ghost" id="themeBtn" title="Switch theme"></button>
 </header>
@@ -228,8 +257,9 @@ dialog.modal p { margin: 10px 0; white-space: pre-line; overflow-wrap: anywhere;
 <main class="wrap-main">
   <div id="page-setup" role="tabpanel" aria-labelledby="tab-setup"></div>
   <div id="page-work" role="tabpanel" aria-labelledby="tab-work" hidden></div>
+  <div id="page-summary" role="tabpanel" aria-labelledby="tab-summary" hidden></div>
 </main>
-<footer class="footer">
+<footer class="footer no-print">
   <span>🔒 Private: this app makes no network requests. Data stays in this browser and in files you download. Links simply open your other programs (SharePoint, company pages…) in a new tab; your answers are never added to them.</span>
   <button class="btn small danger" id="clearAll">Clear all data in this browser</button>
 </footer>
@@ -509,12 +539,12 @@ function newProject(name, tpl) {
 
 /* ───────────── State ───────────── */
 const state = { setups: [], activeSetupId: null, projects: [], ui: { tab: 'setup', theme: 'auto', openProjectId: null } };
-const view = { setupCollapsed: new Set(), expanded: new Set(), previewKey: null, dragIdx: null, focusNext: null };
+const view = { summaryAnswers: true, setupCollapsed: new Set(), expanded: new Set(), previewKey: null, dragIdx: null, focusNext: null };
 
 function loadUi() {
   const ui = lsRead(LS.ui);
   if (!isObj(ui)) return;
-  if (ui.tab === 'setup' || ui.tab === 'work') state.ui.tab = ui.tab;
+  if (['setup', 'work', 'summary'].includes(ui.tab)) state.ui.tab = ui.tab;
   if (['auto', 'light', 'dark'].includes(ui.theme)) state.ui.theme = ui.theme;
   if (typeof ui.openProjectId === 'string') state.ui.openProjectId = ui.openProjectId;
 }
@@ -584,8 +614,8 @@ async function promptBox(title, label, value, okLabel = 'Save') {
 }
 
 /* ───────────── Files (download / read) ───────────── */
-function download(name, text) {
-  const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+function download(name, text, type = 'application/json') {
+  const url = URL.createObjectURL(new Blob([text], { type }));
   const a = h('a', { href: url, download: name });
   document.body.append(a);
   a.click();
@@ -613,11 +643,11 @@ function render() {
 
   applyTheme();
   const tab = state.ui.tab;
-  $('#tab-setup').setAttribute('aria-selected', String(tab === 'setup'));
-  $('#tab-work').setAttribute('aria-selected', String(tab === 'work'));
-  $('#page-setup').hidden = tab !== 'setup';
-  $('#page-work').hidden = tab !== 'work';
-  if (tab === 'setup') renderSetup(); else renderWork();
+  for (const t of ['setup', 'work', 'summary']) {
+    $('#tab-' + t).setAttribute('aria-selected', String(tab === t));
+    $('#page-' + t).hidden = tab !== t;
+  }
+  if (tab === 'setup') renderSetup(); else if (tab === 'work') renderWork(); else renderSummary();
   updateSaved();
 
   window.scrollTo(0, y);
@@ -900,6 +930,7 @@ function projectView(p) {
       h('div', { class: 'btn-group' },
         btn('💾 Save project', () => saveProjectFile(p), 'primary'),
         btn('📂 Open project file', () => $('#fileProject').click()),
+        btn('📋 Summary', () => { state.ui.tab = 'summary'; saveUi(); render(); window.scrollTo(0, 0); }),
         btn('Rename', () => renameProject(p)))),
     h('h2', { class: 'proj-title' }, p.name),
     h('div', { class: 'meta' }, `Setup: ${p.template.name} · Started ${fmtDateTime(p.createdAt)} · `,
@@ -1107,6 +1138,124 @@ async function openProjectFile(file) {
   }
 }
 
+/* ───────────── PAGE 3: SUMMARY ───────────── */
+function answerText(t, a) {
+  switch (t.type) {
+    case 'checkbox': return a === true ? '✓ Done' : '✗ Not done';
+    case 'multi': return Array.isArray(a) && a.length ? a.join(', ') : '';
+    case 'text': return typeof a === 'string' ? a.trim() : '';
+    default: return typeof a === 'string' ? a : '';
+  }
+}
+function stepStatusText(st) {
+  if (st.status === 'done') return st.completedAt ? `Done · ${fmtDateTime(st.completedAt)}` : 'Done';
+  return st.status === 'active' ? 'In progress' : 'Not started';
+}
+function projectStatusText(p) {
+  const n = p.template.steps.length;
+  return p.completedAt ? `Complete — finished ${fmtDateTime(p.completedAt)}` : `In progress — step ${doneCount(p)} of ${n} complete`;
+}
+
+function renderSummary() {
+  const root = $('#page-summary');
+  if (!state.projects.length) {
+    root.replaceChildren(h('section', { class: 'card empty' }, 'No projects yet. Create one on the Work page, or open a project file there.'));
+    return;
+  }
+  const p = openProjectObj();
+  const projects = [...state.projects].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+  const sel = h('select', { id: 'sumSel', value: p ? p.id : '', 'aria-label': 'Project',
+    onchange: e => { state.ui.openProjectId = e.target.value || null; view.expanded.clear(); view.previewKey = null; saveUi(); render(); } },
+    p ? null : h('option', { value: '' }, '— Choose a project —'),
+    projects.map(x => h('option', { value: x.id }, `${x.name} (${doneCount(x)}/${x.template.steps.length})`)));
+  const bar = h('section', { class: 'card toolbar no-print' },
+    h('div', { class: 'row wrap' }, h('label', { class: 'lbl', for: 'sumSel' }, 'Project'), sel),
+    p ? h('div', { class: 'row wrap between' },
+      h('label', { class: 'toggle' },
+        h('input', { type: 'checkbox', checked: view.summaryAnswers, onchange: e => { view.summaryAnswers = e.target.checked; render(); } }),
+        'Show to-do answers'),
+      h('div', { class: 'btn-group' },
+        btn('📋 Copy text', () => copySummary(p)),
+        btn('⬇ Download .txt', () => {
+          const name = fileSafe(p.name) + ' - summary.txt';
+          download(name, summaryText(p), 'text/plain;charset=utf-8');
+          toast(`Saved "${name}" to your downloads.`, 'ok');
+        }),
+        btn('🖨 Print / PDF', () => window.print()))) : null);
+  if (!p) { root.replaceChildren(bar); return; }
+
+  const n = p.template.steps.length, d = doneCount(p);
+  const fill = h('div', {});
+  fill.style.width = Math.round(d / n * 100) + '%';
+  const head = h('section', { class: 'card sum-head' },
+    h('h2', {}, p.name),
+    h('dl', { class: 'sum-facts' },
+      h('dt', {}, 'Setup'), h('dd', {}, p.template.name),
+      h('dt', {}, 'Started'), h('dd', {}, fmtDateTime(p.createdAt)),
+      h('dt', {}, 'Last updated'), h('dd', {}, fmtDateTime(p.updatedAt)),
+      h('dt', {}, 'Status'), h('dd', {}, projectStatusText(p))),
+    h('div', { class: 'progress', role: 'progressbar', 'aria-label': 'Project progress', 'aria-valuemin': 0, 'aria-valuemax': n, 'aria-valuenow': d }, fill),
+    h('div', { class: 'progress-label' }, `Step ${d} of ${n} complete`));
+
+  const steps = p.template.steps.map((s, i) => {
+    const st = p.steps[s.id];
+    const showAnswers = view.summaryAnswers && st.status !== 'locked' && s.todos.length;
+    return h('section', { class: 'card sum-step' },
+      h('div', { class: 'sum-step-head' },
+        h('span', { class: 'tick' + (st.status === 'done' ? ' on' : ''), 'aria-hidden': 'true' }, '✓'),
+        h('h3', {}, `${i + 1}. ${s.topic || 'Untitled step'}`),
+        h('span', { class: 'pill ' + st.status }, stepStatusText(st))),
+      showAnswers ? h('ul', { class: 'sum-answers' }, s.todos.map(t => {
+        const txt = answerText(t, st.answers[t.id]);
+        return h('li', {}, h('span', {}, t.label || '(untitled)', t.required ? h('span', { class: 'req-mark' }, ' *') : null),
+          h('span', { class: 'a' + (txt ? '' : ' none') }, txt || '—'));
+      })) : null,
+      st.note.trim()
+        ? h('div', { class: 'sum-note' }, st.note)
+        : h('div', { class: 'sum-note none' }, st.status === 'locked' ? 'Not started yet.' : 'No notes.'));
+  });
+  root.replaceChildren(bar, head, ...steps);
+}
+
+function summaryText(p) {
+  const n = p.template.steps.length;
+  const lines = [
+    `Project: ${p.name}`,
+    `Setup: ${p.template.name}`,
+    `Started: ${fmtDateTime(p.createdAt)}`,
+    `Last updated: ${fmtDateTime(p.updatedAt)}`,
+    `Status: ${projectStatusText(p)}`,
+    ''
+  ];
+  p.template.steps.forEach((s, i) => {
+    const st = p.steps[s.id];
+    lines.push(`${i + 1}. ${s.topic || 'Untitled step'} — ${stepStatusText(st)}`);
+    if (view.summaryAnswers && st.status !== 'locked')
+      s.todos.forEach(t => lines.push(`   - ${t.label || '(untitled)'}: ${answerText(t, st.answers[t.id]) || '—'}`));
+    if (st.note.trim()) {
+      lines.push('   Notes:');
+      st.note.trim().split(/\r?\n/).forEach(l => lines.push('     ' + l));
+    }
+    lines.push('');
+  });
+  return lines.join('\n');
+}
+async function copySummary(p) {
+  const text = summaryText(p);
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (e) {
+    const ta = h('textarea', { value: text, style: 'position:fixed;opacity:0' });
+    document.body.append(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (err) { /* ignore */ }
+    ta.remove();
+    if (!ok) { toast('Could not copy. Use "Download .txt" instead.', 'error'); return; }
+  }
+  toast('Summary copied — paste it into an email or document.', 'ok');
+}
+
 /* ───────────── Global wiring ───────────── */
 async function clearAll() {
   if (!await confirmBox('Clear all data?', 'Delete every setup and project stored in this browser? Export setups and save project files first if you want to keep them. This cannot be undone.', 'Delete everything')) return;
@@ -1121,8 +1270,8 @@ async function clearAll() {
 }
 
 function init() {
-  $('#tab-setup').addEventListener('click', () => { state.ui.tab = 'setup'; saveUi(); render(); window.scrollTo(0, 0); });
-  $('#tab-work').addEventListener('click', () => { state.ui.tab = 'work'; saveUi(); render(); window.scrollTo(0, 0); });
+  for (const t of ['setup', 'work', 'summary'])
+    $('#tab-' + t).addEventListener('click', () => { state.ui.tab = t; saveUi(); render(); window.scrollTo(0, 0); });
   $('#themeBtn').addEventListener('click', () => {
     state.ui.theme = { auto: 'light', light: 'dark', dark: 'auto' }[state.ui.theme];
     saveUi(); applyTheme();
