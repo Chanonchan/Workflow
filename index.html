@@ -10,259 +10,437 @@
 <link rel="icon" href="data:,">
 <style>
 :root {
-  --bg: #f4f5f7; --surface: #ffffff; --surface-2: #f0f2f5; --text: #1b1f24; --muted: #5b6470;
-  --border: #d8dce2; --accent: #2f6fde; --accent-text: #ffffff; --accent-soft: #e7eefc;
-  --ok: #1d8049; --ok-soft: #e2f3e9; --danger: #c22f2f; --danger-soft: #fbe9e9;
-  --warn: #8a5d00; --warn-soft: #fff3d1;
-  --shadow: 0 1px 2px rgba(0,0,0,.05), 0 2px 10px rgba(0,0,0,.04);
-  --radius: 12px;
+  --bg: #f5f6f8; --surface: #ffffff; --surface-2: #f2f4f7; --surface-3: #e9ecf1;
+  --text: #101828; --text-2: #344054; --muted: #667085; --border: #e4e7ec; --border-strong: #d0d5dd;
+  --accent: #4f46e5; --accent-hover: #4338ca; --accent-text: #ffffff; --accent-soft: #eef0ff; --accent-line: #c7cbfb;
+  --ok: #079455; --ok-strong: #067647; --ok-soft: #e7f8ef; --ok-line: #a6e6c4;
+  --warn: #b54708; --warn-soft: #fff6e5; --warn-line: #fcd9a1;
+  --danger: #d92d20; --danger-soft: #fef1f0;
+  --shadow-sm: 0 1px 2px rgba(16,24,40,.05);
+  --shadow: 0 1px 3px rgba(16,24,40,.08), 0 1px 2px rgba(16,24,40,.04);
+  --shadow-lg: 0 12px 32px -6px rgba(16,24,40,.18);
+  --r: 12px; --r-sm: 8px;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #111418; --surface: #1a1e24; --surface-2: #232830; --text: #e5e8ed; --muted: #9aa3af;
-    --border: #2f3641; --accent: #6d9fff; --accent-text: #0b1220; --accent-soft: #1c2943;
-    --ok: #4cc38a; --ok-soft: #16301f; --danger: #ff7d7d; --danger-soft: #3a1d1e;
-    --warn: #e3b341; --warn-soft: #382c10;
-    --shadow: 0 1px 2px rgba(0,0,0,.4);
+    --bg: #0c111d; --surface: #141a26; --surface-2: #1b2230; --surface-3: #252d3c;
+    --text: #f2f4f7; --text-2: #cfd4dc; --muted: #94a0b3; --border: #262f3f; --border-strong: #344054;
+    --accent: #8191ff; --accent-hover: #9aa6ff; --accent-text: #0c111d; --accent-soft: #1d2342; --accent-line: #3b4380;
+    --ok: #3ccb7f; --ok-strong: #47cd89; --ok-soft: #10291d; --ok-line: #1f5a3c;
+    --warn: #fdb022; --warn-soft: #2e2210; --warn-line: #6b4a12;
+    --danger: #f97066; --danger-soft: #34171a;
+    --shadow-sm: none; --shadow: 0 1px 2px rgba(0,0,0,.4); --shadow-lg: 0 16px 40px rgba(0,0,0,.55);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #111418; --surface: #1a1e24; --surface-2: #232830; --text: #e5e8ed; --muted: #9aa3af;
-  --border: #2f3641; --accent: #6d9fff; --accent-text: #0b1220; --accent-soft: #1c2943;
-  --ok: #4cc38a; --ok-soft: #16301f; --danger: #ff7d7d; --danger-soft: #3a1d1e;
-  --warn: #e3b341; --warn-soft: #382c10;
-  --shadow: 0 1px 2px rgba(0,0,0,.4);
+  --bg: #0c111d; --surface: #141a26; --surface-2: #1b2230; --surface-3: #252d3c;
+  --text: #f2f4f7; --text-2: #cfd4dc; --muted: #94a0b3; --border: #262f3f; --border-strong: #344054;
+  --accent: #8191ff; --accent-hover: #9aa6ff; --accent-text: #0c111d; --accent-soft: #1d2342; --accent-line: #3b4380;
+  --ok: #3ccb7f; --ok-strong: #47cd89; --ok-soft: #10291d; --ok-line: #1f5a3c;
+  --warn: #fdb022; --warn-soft: #2e2210; --warn-line: #6b4a12;
+  --danger: #f97066; --danger-soft: #34171a;
+  --shadow-sm: none; --shadow: 0 1px 2px rgba(0,0,0,.4); --shadow-lg: 0 16px 40px rgba(0,0,0,.55);
   color-scheme: dark;
 }
+
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--bg); color: var(--text);
-  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Thai", sans-serif;
+  font: 14px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, "Noto Sans", "Noto Sans Thai", "Leelawadee UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 [hidden] { display: none !important; }
-h1, h2, h3, h4 { margin: 0; line-height: 1.25; }
-h2 { font-size: 1.15rem; }
-h3 { font-size: 1.05rem; }
-h4 { font-size: .85rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+h1, h2, h3, h4, p { margin: 0; }
+h1 { font-size: 22px; line-height: 1.25; font-weight: 650; letter-spacing: -.01em; }
+h2 { font-size: 19px; line-height: 1.3; font-weight: 650; letter-spacing: -.01em; }
+h3 { font-size: 15px; font-weight: 650; }
 a { color: var(--accent); }
+svg.i { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.muted { color: var(--muted); }
+.eyebrow { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* Top bar */
-.topbar {
-  position: sticky; top: 0; z-index: 20; background: var(--surface); border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 12px; padding: 8px 16px;
-}
-.brand { font-weight: 700; font-size: 1.05rem; white-space: nowrap; }
-.tabs { display: flex; gap: 4px; background: var(--surface-2); padding: 3px; border-radius: 10px; margin: 0 auto; }
-.tab {
-  border: 0; background: transparent; color: var(--muted); font: inherit; font-weight: 600;
-  padding: 6px 18px; border-radius: 8px; cursor: pointer;
-}
-.tab[aria-selected="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
-.wrap-main { max-width: 900px; margin: 0 auto; padding: 16px; }
+/* ── App bar ── */
+.appbar { position: sticky; top: 0; z-index: 30; background: var(--surface); background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+.appbar-in { max-width: 1240px; margin: 0 auto; height: 56px; padding: 0 24px; display: flex; align-items: center; gap: 24px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; white-space: nowrap; }
+.logo { width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: var(--accent-text); display: grid; place-items: center; font-size: 16px; }
+.nav { display: flex; gap: 2px; height: 100%; }
+.nav-tab { display: inline-flex; align-items: center; gap: 8px; height: 100%; padding: 0 14px; border: 0; background: none; color: var(--muted); font: inherit; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.nav-tab svg { font-size: 16px; }
+.nav-tab:hover { color: var(--text); }
+.nav-tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.appbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.saved { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.saved svg { color: var(--ok); font-size: 14px; }
+.saved.bad, .saved.bad svg { color: var(--danger); }
 
-/* Generic controls */
-.btn {
-  font: inherit; font-size: .9rem; border: 1px solid var(--border); background: var(--surface); color: var(--text);
-  padding: 6px 12px; border-radius: 8px; cursor: pointer; white-space: nowrap; min-height: 34px;
-}
+.container { max-width: 1240px; margin: 0 auto; padding: 24px; }
+.banner { max-width: 1192px; margin: 16px auto 0; border-radius: var(--r-sm); padding: 10px 14px; font-size: 13px; }
+.banner.warn { background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn-line); }
+
+/* ── Buttons & inputs ── */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; font: inherit; font-weight: 600; font-size: 13.5px;
+  height: 36px; padding: 0 14px; border-radius: var(--r-sm); border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--text-2); cursor: pointer; white-space: nowrap; box-shadow: var(--shadow-sm); transition: background .12s, border-color .12s; }
+.btn svg { font-size: 16px; }
 .btn:hover:not(:disabled) { background: var(--surface-2); }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
-.btn.primary:hover:not(:disabled) { filter: brightness(1.07); background: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.btn.primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
 .btn.danger { color: var(--danger); }
 .btn.danger.solid { background: var(--danger); border-color: var(--danger); color: #fff; }
-.btn.ghost { border-color: transparent; background: transparent; }
-.btn.small { padding: 3px 9px; min-height: 28px; font-size: .82rem; }
-.btn:disabled { opacity: .45; cursor: not-allowed; }
-.icon-btn {
-  font: inherit; border: 1px solid transparent; background: transparent; color: var(--muted);
-  width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: inline-grid; place-items: center; flex: none;
-}
+.btn.ghost { border-color: transparent; background: transparent; box-shadow: none; }
+.btn.ghost:hover:not(:disabled) { background: var(--surface-2); }
+.btn.sm { height: 30px; padding: 0 10px; font-size: 12.5px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.icon-btn { display: inline-grid; place-items: center; width: 32px; height: 32px; flex: none; border-radius: var(--r-sm); border: 1px solid transparent;
+  background: transparent; color: var(--muted); cursor: pointer; font-size: 16px; }
 .icon-btn:hover:not(:disabled) { background: var(--surface-2); color: var(--text); }
-.icon-btn.danger:hover:not(:disabled) { color: var(--danger); background: var(--danger-soft); }
-.icon-btn:disabled { opacity: .3; cursor: not-allowed; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon-btn.danger:hover:not(:disabled) { background: var(--danger-soft); color: var(--danger); }
+.icon-btn:disabled { opacity: .35; cursor: not-allowed; }
+.icon-btn.bordered { border-color: var(--border-strong); background: var(--surface); box-shadow: var(--shadow-sm); }
+.btn-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.btn-row.tight { gap: 2px; flex-wrap: nowrap; }
 input[type="text"], select, textarea {
-  font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 6px 10px; min-height: 34px; width: 100%; min-width: 0;
+  font: inherit; font-size: 14px; color: var(--text); background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm); padding: 7px 11px; min-height: 36px; width: 100%; min-width: 0; box-shadow: var(--shadow-sm);
+  transition: border-color .12s, box-shadow .12s;
 }
-textarea { resize: vertical; min-height: 60px; }
-input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent); outline: 2px solid var(--accent-soft); outline-offset: 0; }
-input:disabled, select:disabled, textarea:disabled { background: var(--surface-2); }
-input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; accent-color: var(--accent); margin: 0; flex: none; }
-.row { display: flex; align-items: center; gap: 8px; }
-.row.wrap { flex-wrap: wrap; }
-.row.between { justify-content: space-between; }
-.btn-group { display: flex; flex-wrap: wrap; gap: 6px; }
-.btn-group.tight { gap: 0; flex-wrap: nowrap; }
-.grow { flex: 1 1 auto; }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 12px; }
-.hint, .meta { color: var(--muted); font-size: .85rem; }
-.hint { margin: 8px 0 0; }
-.sub { display: block; font-size: .82rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
-.field { display: block; }
-.lbl { font-weight: 600; }
-.saved { font-size: .82rem; color: var(--ok); font-weight: 600; white-space: nowrap; }
-.saved.bad { color: var(--danger); }
-.empty { text-align: center; color: var(--muted); padding: 24px 8px; }
-.banner { border-radius: 10px; padding: 10px 14px; margin: 12px 16px 0; font-size: .9rem; }
-.banner.warn { background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn); }
+textarea { resize: vertical; min-height: 84px; line-height: 1.55; }
+input[type="text"]:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+input:disabled, select:disabled, textarea:disabled { background: var(--surface-2); color: var(--muted); }
+::placeholder { color: var(--muted); opacity: .8; }
+.field { display: grid; gap: 6px; }
+.field-label { font-size: 13px; font-weight: 600; color: var(--text-2); }
+.field-hint { font-size: 12.5px; color: var(--muted); }
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text-2); white-space: nowrap; user-select: none; }
+.switch .track { width: 32px; height: 18px; border-radius: 99px; background: var(--surface-3); position: relative; transition: background .15s; flex: none; }
+.switch .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform .15s; }
+.switch input:checked + .track { background: var(--accent); }
+.switch input:checked + .track::after { transform: translateX(14px); }
+.switch input:focus-visible + .track { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* Setup page */
-.toolbar .row + .row { margin-top: 10px; }
-.toolbar select { width: auto; min-width: 180px; flex: 1 1 200px; max-width: 360px; }
-.step-edit { padding: 0; }
-.step-edit .step-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--border); }
-.step-edit.collapsed .step-head { border-bottom: 0; }
-.step-edit.dragging { opacity: .45; }
-.step-edit.drop-target { outline: 2px dashed var(--accent); outline-offset: 2px; }
-.handle { cursor: grab; color: var(--muted); font-size: 1.2rem; padding: 0 2px; user-select: none; touch-action: none; }
-.step-num { font-size: .78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
-.topic-input { font-weight: 600; }
-.step-body { padding: 12px 14px 14px; display: grid; gap: 16px; }
-.section-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
-.todo-edit { border: 1px solid var(--border); border-radius: 10px; padding: 8px; margin-bottom: 8px; background: var(--surface-2); }
-.todo-main { display: grid; grid-template-columns: minmax(0, 1fr) 190px auto auto; gap: 8px; align-items: center; }
-.req { display: inline-flex; align-items: center; gap: 6px; font-size: .85rem; white-space: nowrap; cursor: pointer; }
-.options { margin: 8px 0 0 12px; display: grid; gap: 6px; }
-.opt { display: flex; align-items: center; gap: 6px; }
-.opt-mark { color: var(--muted); width: 22px; text-align: center; flex: none; font-size: .85rem; }
-.link-edit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) auto; gap: 8px; align-items: center; margin-bottom: 6px; }
-.add-step { width: 100%; padding: 10px; }
+/* ── Layout pieces ── */
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.page-head p { color: var(--muted); margin-top: 4px; }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--shadow); }
+.panel + .panel { margin-top: 16px; }
+.split > .panel { margin-top: 0; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.panel-body { padding: 18px; }
+.split { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: start; }
+.sticky-side { position: sticky; top: 76px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap;
+  background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); }
+.chip svg { font-size: 13px; }
+.chip.ok { background: var(--ok-soft); color: var(--ok-strong); border-color: var(--ok-line); }
+.chip.accent { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); border-color: var(--warn-line); }
+.empty { text-align: center; padding: 48px 20px; color: var(--muted); }
+.empty .empty-ic { width: 48px; height: 48px; margin: 0 auto 12px; border-radius: 12px; display: grid; place-items: center; background: var(--surface-2); color: var(--muted); font-size: 22px; }
+.empty h3 { color: var(--text); margin-bottom: 4px; }
+.bar { height: 8px; background: var(--surface-3); border-radius: 99px; overflow: hidden; }
+.bar > div { height: 100%; background: var(--ok); border-radius: 99px; transition: width .3s; }
+.bar.sm { height: 6px; }
 
-/* Work page */
-.np-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; gap: 10px; align-items: end; margin-top: 10px; }
-.proj-list { list-style: none; margin: 10px 0 0; padding: 0; }
-.proj-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border); }
-.proj-row:first-child { border-top: 0; }
-.proj-info { min-width: 0; }
-.linklike { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: var(--accent); cursor: pointer; text-align: left; }
-.mini { display: inline-block; width: 60px; height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; vertical-align: middle; margin: 0 4px; }
-.mini > i { display: block; height: 100%; background: var(--ok); }
-.badge { display: inline-block; font-size: .72rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--ok-soft); color: var(--ok); margin-left: 6px; }
-.proj-title { font-size: 1.35rem; margin: 10px 0 2px; overflow-wrap: anywhere; }
-.progress { height: 10px; background: var(--surface-2); border-radius: 5px; overflow: hidden; margin-top: 12px; }
-.progress > div { height: 100%; background: var(--ok); border-radius: 5px; transition: width .25s; }
-.progress-label { font-size: .88rem; font-weight: 600; margin-top: 6px; }
-.complete { background: var(--ok-soft); color: var(--ok); border: 1px solid var(--ok); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; font-weight: 600; }
-.complete strong { font-size: 1.1rem; display: block; }
-.step { padding: 0; }
-.step.active { border-color: var(--accent); }
-.step .step-head { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--border); }
-.step-titles { flex: 1; min-width: 0; }
-.step-titles h3 { overflow-wrap: anywhere; }
-.tick {
-  width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--border); flex: none;
-  display: grid; place-items: center; font-weight: 800; font-size: .9rem; color: transparent; cursor: default; user-select: none;
-}
+/* ── Setup ── */
+.tpl-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; }
+.tpl-bar .tpl-select { display: flex; align-items: center; gap: 10px; flex: 1 1 320px; min-width: 0; }
+.tpl-bar select { max-width: 380px; font-weight: 600; }
+.divider-v { width: 1px; height: 24px; background: var(--border); }
+.hint-line { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12.5px; margin: 10px 2px 18px; }
+.step-list { list-style: none; margin: 0; padding: 6px; display: grid; gap: 2px; }
+.sl-item { border-radius: var(--r-sm); }
+.sl-item.dragging { opacity: .4; }
+.sl-item.drop-target { box-shadow: inset 0 2px 0 var(--accent); }
+.sl-btn { width: 100%; display: grid; grid-template-columns: 14px 26px minmax(0, 1fr); align-items: center; gap: 8px; padding: 8px 10px 8px 6px; border: 0; border-radius: var(--r-sm);
+  background: none; font: inherit; color: var(--text); text-align: left; cursor: pointer; }
+.sl-btn:hover { background: var(--surface-2); }
+.sl-item.on .sl-btn { background: var(--accent-soft); }
+.sl-grip { color: var(--muted); font-size: 14px; cursor: grab; opacity: .6; }
+.num { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
+.sl-item.on .num { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.sl-text { min-width: 0; display: grid; }
+.sl-title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sl-title.untitled { color: var(--muted); font-style: italic; font-weight: 500; }
+.sl-sub { font-size: 12px; color: var(--muted); }
+.side-foot { padding: 10px; border-top: 1px solid var(--border); }
+.side-foot .btn { width: 100%; }
+.ed-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.ed-body { padding: 20px; display: grid; gap: 22px; }
+.title-input { font-size: 17px !important; font-weight: 650; min-height: 42px !important; }
+.ed-section { display: grid; gap: 10px; }
+.ed-section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.ed-section-head h3 { display: flex; align-items: center; gap: 8px; }
+.ed-section-head h3 svg { color: var(--muted); font-size: 16px; }
+.count { font-size: 12px; font-weight: 600; color: var(--muted); background: var(--surface-2); border-radius: 99px; padding: 1px 8px; }
+.te { border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.te-main { display: grid; grid-template-columns: 24px minmax(0, 1fr) 190px auto auto; gap: 10px; align-items: center; padding: 10px 10px 10px 12px; }
+.te-num { font-size: 12px; font-weight: 700; color: var(--muted); text-align: center; }
+.te-opts { border-top: 1px dashed var(--border); padding: 10px 12px 12px 46px; display: grid; gap: 6px; background: var(--surface-2); border-radius: 0 0 10px 10px; }
+.opt { display: flex; align-items: center; gap: 8px; }
+.opt-mark { color: var(--muted); width: 18px; display: grid; place-items: center; flex: none; font-size: 14px; }
+.opt input { min-height: 32px; padding: 5px 10px; }
+.le { display: grid; grid-template-columns: 32px minmax(0, 1fr) minmax(0, 1.6fr) auto; gap: 8px; align-items: center; }
+.le-ic { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; background: var(--surface-2); color: var(--muted); font-size: 16px; }
+.none-yet { font-size: 13px; color: var(--muted); padding: 4px 2px; }
+
+/* ── Work: projects list ── */
+.new-proj { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 12px; align-items: end; }
+.pt { width: 100%; }
+.pt-head, .pt-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(150px, 1.2fr) 150px 140px; gap: 16px; align-items: center; padding: 12px 18px; }
+.pt-head { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); padding-top: 10px; padding-bottom: 10px; }
+.pt-row { border-bottom: 1px solid var(--border); cursor: pointer; }
+.pt-row:last-child { border-bottom: 0; }
+.pt-row:hover { background: var(--surface-2); }
+.pt-name { font-weight: 650; color: var(--text); background: none; border: 0; padding: 0; font: inherit; font-weight: 650; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.pt-sub { font-size: 12.5px; color: var(--muted); }
+.pt-prog { display: grid; gap: 6px; }
+.pt-prog-top { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+.pt-date { font-size: 13px; color: var(--text-2); }
+.pt-actions { justify-self: end; }
+
+/* ── Work: project view ── */
+.crumb { display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; color: var(--muted); font: inherit; font-weight: 600; cursor: pointer; padding: 4px 6px 4px 0; margin-bottom: 6px; }
+.crumb:hover { color: var(--accent); }
+.proj-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.proj-top h1 { overflow-wrap: anywhere; }
+.proj-meta { color: var(--muted); margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.progress-card { margin: 18px 0 20px; padding: 14px 18px; display: grid; gap: 10px; }
+.progress-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-weight: 650; }
+.progress-top .pct { color: var(--muted); font-weight: 600; }
+.done-banner { display: flex; align-items: center; gap: 14px; padding: 14px 18px; margin-bottom: 16px; border-radius: var(--r); background: var(--ok-soft); border: 1px solid var(--ok-line); color: var(--ok-strong); }
+.done-banner .ic { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--ok); color: #fff; font-size: 20px; flex: none; }
+.done-banner strong { display: block; font-size: 15px; }
+
+/* Stepper (left) */
+.stepper { list-style: none; margin: 0; padding: 10px; }
+.sp-item { position: relative; }
+.sp-item:not(:last-child)::before { content: ""; position: absolute; left: 25px; top: 40px; bottom: -6px; width: 2px; background: var(--border); border-radius: 2px; }
+.sp-item.line-done::before { background: var(--ok); }
+.sp-btn { width: 100%; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; align-items: center; padding: 8px; border: 0; border-radius: 10px; background: none;
+  text-align: left; font: inherit; color: var(--text); cursor: pointer; position: relative; z-index: 1; }
+.sp-btn:hover { background: var(--surface-2); }
+.sp-item.sel .sp-btn { background: var(--accent-soft); }
+.circle { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; background: var(--surface); border: 2px solid var(--border-strong); color: var(--muted); }
+.circle svg { font-size: 16px; }
+.s-done .circle { background: var(--ok); border-color: var(--ok); color: #fff; }
+.s-current .circle { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); background: var(--surface); }
+.s-open .circle { border-color: var(--warn); color: var(--warn); }
+.s-locked .circle { border-style: dashed; color: var(--muted); }
+.sp-text { min-width: 0; display: grid; }
+.sp-title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.s-locked .sp-title { color: var(--muted); }
+.sp-sub { font-size: 12px; color: var(--muted); }
+.s-done .sp-sub { color: var(--ok-strong); }
+.sp-more { padding: 6px 8px 2px; }
+.add-preview { display: inline-flex; align-items: center; gap: 10px; width: 100%; padding: 8px; border: 1px dashed var(--border-strong); border-radius: 10px; background: none;
+  color: var(--muted); font: inherit; font-weight: 600; cursor: pointer; }
+.add-preview:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.add-preview .plus { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; border: 2px dashed currentColor; font-size: 16px; flex: none; }
+.locked-count { font-size: 12px; color: var(--muted); padding: 8px 10px 4px; }
+
+/* Step panel (right) */
+.step-panel { overflow: hidden; }
+.step-panel.preview { border-style: dashed; }
+.hero { padding: 20px 24px; border-bottom: 1px solid var(--border); }
+.hero-row { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+.hero-row h2 { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.tick { width: 26px; height: 26px; border-radius: 7px; border: 2px solid var(--border-strong); flex: none; display: grid; place-items: center; color: transparent; font-size: 16px; cursor: default; }
 .tick.on { background: var(--ok); border-color: var(--ok); color: #fff; }
-.step-line { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font: inherit; color: var(--text); cursor: pointer; padding: 10px 14px; }
-.step-line:hover { background: var(--surface-2); }
-.line-topic { flex: 1; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.chev { color: var(--muted); }
-.todos { display: grid; gap: 10px; }
-.todo { border: 0; margin: 0; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); border-left: 3px solid transparent; min-width: 0; }
-.todo.is-done { border-left-color: var(--ok); }
-.todo legend, .todo .q { font-weight: 600; padding: 0; margin-bottom: 4px; float: left; width: 100%; }
-.todo legend + * { clear: both; }
-.check { display: flex; align-items: flex-start; gap: 8px; padding: 3px 0; cursor: pointer; overflow-wrap: anywhere; }
-.check input { margin-top: 2px; }
-.req-mark { color: var(--danger); font-weight: 700; }
-.links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.links ul { margin: 0; padding-left: 18px; }
-.links li { margin: 2px 0; overflow-wrap: anywhere; }
-.step.preview { opacity: .55; border-style: dashed; box-shadow: none; }
-.reveal { display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; }
-.plus {
-  width: 40px; height: 40px; border-radius: 50%; border: 2px dashed var(--border); background: var(--surface);
-  color: var(--muted); font-size: 1.4rem; line-height: 1; cursor: pointer; flex: none;
-}
-.plus:hover { border-color: var(--accent); color: var(--accent); }
-.footer { max-width: 900px; margin: 8px auto 32px; padding: 0 16px; color: var(--muted); font-size: .8rem; display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.locked-note { display: flex; align-items: center; gap: 10px; margin: 16px 24px 0; padding: 10px 14px; border-radius: var(--r-sm); background: var(--surface-2); color: var(--muted); font-weight: 600; font-size: 13px; }
+.instruction { display: flex; gap: 12px; margin: 18px 24px 0; padding: 12px 16px; border-radius: var(--r-sm); background: var(--accent-soft); border: 1px solid var(--accent-line); color: var(--text-2); }
+.instruction svg { color: var(--accent); font-size: 18px; margin-top: 1px; }
+.instruction .t { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); margin-bottom: 2px; }
+.instruction p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.sec { padding: 20px 24px 4px; }
+.sec-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.sec-head h3 { display: flex; align-items: center; gap: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-2); }
+.sec-head h3 svg { font-size: 16px; color: var(--muted); }
+.sec-meta { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.sec-meta.ok { color: var(--ok-strong); }
 
-/* Summary page */
-.sum-head h2 { font-size: 1.35rem; overflow-wrap: anywhere; }
-.sum-facts { display: grid; grid-template-columns: max-content 1fr; gap: 2px 14px; margin: 10px 0 0; font-size: .9rem; }
-.sum-facts dt { color: var(--muted); }
-.sum-facts dd { margin: 0; overflow-wrap: anywhere; }
-.sum-step { break-inside: avoid; }
-.sum-step-head { display: flex; align-items: center; gap: 10px; }
-.sum-step-head h3 { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-.pill { font-size: .75rem; font-weight: 700; padding: 2px 10px; border-radius: 999px; white-space: nowrap; background: var(--surface-2); color: var(--muted); }
-.pill.done { background: var(--ok-soft); color: var(--ok); }
-.pill.active { background: var(--accent-soft); color: var(--accent); }
-.sum-answers { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: .9rem; }
-.sum-answers li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 10px; padding: 4px 0; border-bottom: 1px dashed var(--border); }
-.sum-answers .a { font-weight: 600; overflow-wrap: anywhere; white-space: pre-wrap; }
+.checklist { list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.ci { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; padding: 14px 16px; border-top: 1px solid var(--border); background: var(--surface); transition: background .15s; }
+.ci:first-child { border-top: 0; }
+.ci.done { background: var(--ok-soft); background: color-mix(in srgb, var(--ok-soft) 45%, var(--surface)); }
+.ci-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border-strong); display: grid; place-items: center; color: transparent; font-size: 13px; margin-top: 1px; }
+.ci.done .ci-dot { background: var(--ok); border-color: var(--ok); color: #fff; }
+.ci-body { display: grid; gap: 10px; min-width: 0; }
+.ci-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.ci-label { font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
+.req { font-size: 11px; font-weight: 700; color: var(--danger); background: var(--danger-soft); border-radius: 4px; padding: 0 6px; line-height: 18px; text-transform: uppercase; letter-spacing: .03em; }
+.ci.check { padding: 0; }
+.ci-check { grid-column: 1 / -1; display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; align-items: center; padding: 14px 16px; cursor: pointer; }
+.ci-check:hover { background: var(--surface-2); }
+.ci.done .ci-check:hover { background: transparent; }
+.box { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border-strong); display: grid; place-items: center; color: transparent; font-size: 14px; background: var(--surface); transition: all .12s; }
+.ci-check input:checked + .box { background: var(--ok); border-color: var(--ok); color: #fff; }
+.ci-check input:focus-visible + .box { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ci.ro .ci-check { cursor: default; }
+.ci.done .ci-check .ci-label { color: var(--text-2); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt-chip { display: inline-flex; align-items: center; gap: 7px; min-height: 34px; padding: 5px 14px 5px 10px; border: 1px solid var(--border-strong); border-radius: 99px;
+  background: var(--surface); color: var(--text-2); font-weight: 500; cursor: pointer; user-select: none; transition: all .12s; box-shadow: var(--shadow-sm); }
+.opt-chip:hover { border-color: var(--accent); }
+.opt-chip .mk { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--border-strong); display: grid; place-items: center; font-size: 11px; color: transparent; flex: none; }
+.opt-chip .mk.round { border-radius: 50%; }
+.opt-chip.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.opt-chip.on .mk { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.opt-chip.on .mk.round { box-shadow: inset 0 0 0 3px var(--accent-soft); }
+.opt-chip:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ci.ro .opt-chip { cursor: default; opacity: .75; }
+.ci-select { max-width: 360px; }
+.ci-text { max-width: 520px; }
+.mt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.mt-grid .field-label { font-size: 12px; color: var(--muted); }
+.linkish { border: 0; background: none; padding: 0; color: var(--muted); font: inherit; font-size: 12.5px; cursor: pointer; text-decoration: underline; justify-self: start; }
+
+.res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.res { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text);
+  text-decoration: none; min-width: 0; transition: border-color .12s, box-shadow .12s; }
+a.res:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+.res-ic { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; font-size: 18px; flex: none; }
+.res-ic.doc { background: var(--accent-soft); color: var(--accent); }
+.res-ic.form { background: var(--warn-soft); color: var(--warn); }
+.res-text { display: grid; min-width: 0; flex: 1; }
+.res-label { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.res-kind { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.res-go { color: var(--muted); font-size: 15px; }
+a.res:hover .res-go { color: var(--accent); }
+
+.step-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 24px; margin-top: 20px; border-top: 1px solid var(--border); background: var(--surface-2); flex-wrap: wrap; }
+.foot-hint { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); }
+
+/* ── Summary ── */
+.sum-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; margin-bottom: 16px; }
+.sum-toolbar select { max-width: 360px; font-weight: 600; }
+.sum-doc { padding: 28px 32px; }
+.sum-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin: 18px 0; padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.sum-facts dt { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.sum-facts dd { margin: 2px 0 0; font-weight: 600; overflow-wrap: anywhere; }
+.sum-step { padding: 18px 0; border-bottom: 1px solid var(--border); break-inside: avoid; }
+.sum-step:last-child { border-bottom: 0; padding-bottom: 0; }
+.sum-step-head { display: flex; align-items: center; gap: 12px; }
+.sum-step-head h3 { flex: 1; min-width: 0; font-size: 15px; overflow-wrap: anywhere; }
+.sum-step-head .circle { width: 28px; height: 28px; font-size: 12px; }
+.sum-answers { margin: 12px 0 0 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); border: 1px solid var(--border); border-radius: var(--r-sm); overflow: hidden; font-size: 13.5px; }
+.sum-answers > div { padding: 8px 12px; border-top: 1px solid var(--border); }
+.sum-answers > div:nth-child(-n+2) { border-top: 0; }
+.sum-answers .q { color: var(--text-2); background: var(--surface-2); }
+.sum-answers .a { font-weight: 600; white-space: pre-wrap; overflow-wrap: anywhere; }
 .sum-answers .a.none { color: var(--muted); font-weight: 400; }
-.sum-note { margin: 10px 0 0; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 8px 8px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-.sum-note.none { border-left-color: var(--border); color: var(--muted); }
-.multitext { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
-.toggle { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; cursor: pointer; white-space: nowrap; }
+.sum-note { margin: 10px 0 0 40px; padding: 10px 14px; border-radius: var(--r-sm); background: var(--surface-2); border-left: 3px solid var(--accent); white-space: pre-wrap; overflow-wrap: anywhere; }
+.sum-note .t { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 2px; white-space: normal; }
+.sum-note.none { border-left-color: var(--border-strong); color: var(--muted); }
 
-/* Toasts + modal */
-#toasts { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 50; display: grid; gap: 8px; width: min(520px, calc(100% - 32px)); }
-.toast { display: flex; align-items: center; gap: 8px; padding: 10px 8px 10px 14px; border-radius: 10px; background: var(--text); color: var(--bg); box-shadow: 0 6px 20px rgba(0,0,0,.25); font-size: .9rem; }
+/* ── Footer, toasts, dialogs ── */
+.footer { max-width: 1240px; margin: 0 auto; padding: 8px 24px 32px; color: var(--muted); font-size: 12.5px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.footer span { display: inline-flex; gap: 8px; align-items: center; }
+#toasts { position: fixed; bottom: 20px; right: 20px; z-index: 60; display: grid; gap: 8px; width: min(400px, calc(100% - 32px)); }
+.toast { display: flex; align-items: center; gap: 10px; padding: 12px 8px 12px 14px; border-radius: 10px; background: var(--text); color: var(--bg); box-shadow: var(--shadow-lg); font-size: 13.5px; font-weight: 500; animation: tin .18s ease-out; }
 .toast > span { flex: 1; }
+.toast .ti { font-size: 18px; flex: none; }
+.toast.ok .ti { color: var(--ok); }
 .toast.error { background: var(--danger); color: #fff; }
-.toast.ok { background: var(--ok); color: #fff; }
-.toast .icon-btn { color: inherit; }
-dialog.modal { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); color: var(--text); padding: 18px; width: min(440px, calc(100% - 32px)); box-shadow: 0 20px 50px rgba(0,0,0,.3); }
-dialog.modal::backdrop { background: rgba(0,0,0,.45); }
-dialog.modal p { margin: 10px 0; white-space: pre-line; overflow-wrap: anywhere; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.toast .icon-btn { color: inherit; opacity: .7; }
+@keyframes tin { from { transform: translateY(8px); opacity: 0; } }
+dialog.modal { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); color: var(--text); padding: 22px; width: min(440px, calc(100% - 32px)); box-shadow: var(--shadow-lg); }
+dialog.modal::backdrop { background: rgba(16,24,40,.5); backdrop-filter: blur(2px); }
+dialog.modal h2 { font-size: 17px; }
+dialog.modal p { margin: 10px 0 0; color: var(--text-2); white-space: pre-line; overflow-wrap: anywhere; }
+dialog.modal .field { margin-top: 14px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
 
-/* Phone */
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .sticky-side { position: static; }
+  .stepper { display: flex; gap: 6px; overflow-x: auto; padding: 8px; scroll-snap-type: x proximity; }
+  .sp-item { flex: 0 0 auto; scroll-snap-align: start; }
+  .sp-item::before { display: none; }
+  .sp-btn { grid-template-columns: 28px auto; gap: 8px; padding: 6px 10px 6px 6px; max-width: 200px; }
+  .circle { width: 28px; height: 28px; }
+  .sp-sub { display: none; }
+  .sp-more { padding: 0; display: flex; align-items: center; }
+  .add-preview { width: auto; white-space: nowrap; padding: 6px 12px 6px 6px; }
+  .add-preview .plus { width: 28px; height: 28px; }
+  .locked-count { display: none; }
+  .step-list { max-height: 260px; overflow-y: auto; }
+  .pt-head { display: none; }
+  .pt-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; }
+  .pt-prog { grid-column: 1 / -1; grid-row: 2; }
+  .pt-date { display: none; }
+  .pt-actions { grid-row: 1; grid-column: 2; }
+}
 @media (max-width: 640px) {
-  .topbar { flex-wrap: wrap; }
-  .tabs { order: 3; width: 100%; }
-  .tab { flex: 1; padding: 6px 8px; }
-  .sum-answers li { grid-template-columns: 1fr; gap: 0; }
-  .topbar { padding: 8px 12px; gap: 8px; }
-  .brand { font-size: .95rem; }
-  .wrap-main { padding: 12px 16px; }
-  .todo-main { grid-template-columns: minmax(0, 1fr) auto; }
-  .todo-main > input { grid-column: 1 / -1; }
-  .todo-main > select { grid-column: 1 / -1; }
-  .link-edit { grid-template-columns: minmax(0, 1fr) auto; }
-  .link-edit > input:first-child { grid-column: 1 / -1; }
-  .np-grid { grid-template-columns: 1fr; }
-  .links-grid { grid-template-columns: 1fr; }
-  .proj-row { flex-direction: column; align-items: stretch; }
-  .toolbar select { max-width: none; }
-  .step-edit .step-head { flex-wrap: wrap; }
-  .step-edit .step-head .topic-input { order: 3; flex-basis: 100%; }
-  .step-edit .step-head .btn-group { margin-left: auto; }
+  .appbar-in { padding: 0 12px; gap: 8px; }
+  .brand span:last-child { display: none; }
+  .nav-tab { padding: 0 8px; gap: 6px; }
+  .appbar-right { gap: 2px; }
+  .saved .txt { display: none; }
+  .container { padding: 16px; }
+  .footer { padding: 8px 16px 24px; }
+  .hero, .sec { padding-left: 16px; padding-right: 16px; }
+  .instruction, .locked-note { margin-left: 16px; margin-right: 16px; }
+  .step-foot { padding: 14px 16px; }
+  .step-foot .btn { flex: 1; }
+  .foot-hint { order: -1; width: 100%; justify-content: center; }
+  .new-proj { grid-template-columns: 1fr; }
+  .te-main { grid-template-columns: 24px minmax(0, 1fr) auto; }
+  .te-main > select { grid-column: 2 / -1; }
+  .te-main > .switch { grid-column: 2; }
+  .te-opts { padding-left: 12px; }
+  .le { grid-template-columns: 32px minmax(0, 1fr) auto; }
+  .le > input:nth-of-type(2) { grid-column: 2 / -1; }
+  .sum-doc { padding: 20px 16px; }
+  .sum-answers, .sum-note { margin-left: 0; }
+  .sum-answers { grid-template-columns: 1fr; }
+  .sum-answers > div:nth-child(2) { border-top: 1px solid var(--border); }
+  .sum-answers .a { border-top: 0 !important; padding-top: 0; }
+  .sum-answers .q { background: none; font-size: 12.5px; color: var(--muted); padding-bottom: 2px; }
+  .page-head h1 { font-size: 20px; }
+}
+@media (max-width: 400px) {
+  .nav-tab svg { display: none; }
 }
 @media print {
   .no-print, .banner, #toasts, dialog { display: none !important; }
   body { background: #fff; color: #000; }
-  .wrap-main { max-width: none; padding: 0; }
-  .card { box-shadow: none; border-color: #bbb; }
+  .container { max-width: none; padding: 0; }
+  .panel { box-shadow: none; border: 0; }
+  .sum-doc { padding: 0; }
 }
 </style>
 </head>
 <body>
-<header class="topbar no-print">
-  <div class="brand">Step Workflow</div>
-  <nav class="tabs" role="tablist" aria-label="Pages">
-    <button class="tab" role="tab" id="tab-setup" aria-controls="page-setup">Setup</button>
-    <button class="tab" role="tab" id="tab-work" aria-controls="page-work">Work</button>
-    <button class="tab" role="tab" id="tab-summary" aria-controls="page-summary">Summary</button>
-  </nav>
-  <button class="btn ghost" id="themeBtn" title="Switch theme"></button>
+<header class="appbar no-print">
+  <div class="appbar-in">
+    <div class="brand"><span class="logo" data-icon="steps"></span><span>Step Workflow</span></div>
+    <nav class="nav" role="tablist" aria-label="Pages">
+      <button class="nav-tab" role="tab" id="tab-setup" aria-controls="page-setup"><span data-icon="sliders"></span><span>Setup</span></button>
+      <button class="nav-tab" role="tab" id="tab-work" aria-controls="page-work"><span data-icon="checks"></span><span>Work</span></button>
+      <button class="nav-tab" role="tab" id="tab-summary" aria-controls="page-summary"><span data-icon="list"></span><span>Summary</span></button>
+    </nav>
+    <div class="appbar-right">
+      <span class="saved" id="saved" aria-live="polite"></span>
+      <button class="icon-btn" id="themeBtn"></button>
+    </div>
+  </div>
 </header>
-<div id="storageWarn" class="banner warn" role="alert" hidden></div>
-<main class="wrap-main">
+<div id="storageWarn" class="banner warn no-print" role="alert" hidden></div>
+<main class="container">
   <div id="page-setup" role="tabpanel" aria-labelledby="tab-setup"></div>
   <div id="page-work" role="tabpanel" aria-labelledby="tab-work" hidden></div>
   <div id="page-summary" role="tabpanel" aria-labelledby="tab-summary" hidden></div>
 </main>
 <footer class="footer no-print">
-  <span>🔒 Private: this app makes no network requests. Data stays in this browser and in files you download. Links simply open your other programs (SharePoint, company pages…) in a new tab; your answers are never added to them.</span>
-  <button class="btn small danger" id="clearAll">Clear all data in this browser</button>
+  <span><span data-icon="shield"></span>Private: no network requests. Your data stays in this browser and in files you save.</span>
+  <button class="btn sm ghost danger" id="clearAll">Clear all data in this browser</button>
 </footer>
 <div id="toasts" aria-live="polite"></div>
 <input type="file" id="fileSetup" accept=".json,application/json" hidden>
@@ -325,13 +503,6 @@ function append(e, kids) {
   }
 }
 const btn = (label, fn, cls = '', attrs = {}) => h('button', Object.assign({ class: 'btn ' + cls, type: 'button', onclick: fn }, attrs), label);
-const iconBtn = (label, title, fn, disabled = false, cls = '') =>
-  h('button', { class: 'icon-btn ' + cls, type: 'button', title, 'aria-label': title, disabled, onclick: fn }, label);
-
-function linkView(l) {
-  // Links are used exactly as typed in Setup.
-  return h('li', {}, l.url ? h('a', { href: l.url, target: '_blank' }, l.label || l.url, ' ↗') : h('span', {}, l.label || '(no link)'));
-}
 
 /* ───────────── Storage (always try/catch) ───────────── */
 let storageOk = true;
@@ -355,12 +526,14 @@ function storageFailed(full) {
     'Changes are NOT saved in this browser — use "Export setup" and "Save project" to keep your work.';
   w.hidden = false;
 }
-function savedText(d) { return storageOk ? (d ? `Saved ✓ ${fmtTime(d)}` : 'Saved ✓') : '⚠ Not saved'; }
 function updateSaved() {
-  for (const [id, d] of [['#savedSetup', lastSetupSaved], ['#savedWork', lastProjectSaved]]) {
-    const e = $(id);
-    if (e) { e.textContent = savedText(d); e.classList.toggle('bad', !storageOk); }
-  }
+  const e = $('#saved');
+  if (!e) return;
+  const d = [lastSetupSaved, lastProjectSaved].filter(Boolean).sort((x, y) => y - x)[0];
+  e.classList.toggle('bad', !storageOk);
+  e.replaceChildren(icon(storageOk ? 'check' : 'alert'),
+    h('span', { class: 'txt' }, storageOk ? (d ? `Saved ${fmtTime(d)}` : 'Saved') : 'Not saved'));
+  e.title = storageOk ? 'All changes are saved in this browser' : 'Browser storage is unavailable';
 }
 function saveSetups() {
   const ok = lsWrite(LS.setups, state.setups) & lsWrite(LS.active, state.activeSetupId);
@@ -543,7 +716,7 @@ function newProject(name, tpl) {
 
 /* ───────────── State ───────────── */
 const state = { setups: [], activeSetupId: null, projects: [], ui: { tab: 'setup', theme: 'auto', openProjectId: null } };
-const view = { summaryAnswers: true, setupCollapsed: new Set(), expanded: new Set(), previewKey: null, dragIdx: null, focusNext: null };
+const view = { summaryAnswers: true, sel: {}, setupSel: null, previewKey: null, dragIdx: null, focusNext: null, scrollToPanel: false };
 
 function loadUi() {
   const ui = lsRead(LS.ui);
@@ -577,7 +750,8 @@ function toast(msg, type = 'info') {
   const box = $('#toasts');
   if (!box) return;
   const t = h('div', { class: 'toast ' + type, role: type === 'error' ? 'alert' : 'status' },
-    h('span', {}, msg), iconBtn('✕', 'Dismiss', () => t.remove()));
+    h('span', { class: 'ti' }, icon(type === 'error' ? 'alert' : type === 'ok' ? 'check' : 'info')),
+    h('span', {}, msg), ibtn('x', 'Dismiss', () => t.remove()));
   box.append(t);
   setTimeout(() => t.remove(), type === 'error' ? 10000 : 3500);
 }
@@ -635,14 +809,64 @@ async function readJsonFile(file) {
   catch (e) { throw new Error('The file is not valid JSON. It may be damaged or not a Step Workflow file.'); }
 }
 
+
+/* ───────────── Icons (inline SVG, no network) ───────────── */
+const ICONS = {
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  x: '<path d="M18 6 6 18M6 6l12 12"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  chevL: '<path d="m15 18-6-6 6-6"/>',
+  chevR: '<path d="m9 18 6-6-6-6"/>',
+  up: '<path d="m18 15-6-6-6 6"/>',
+  down: '<path d="m6 9 6 6 6-6"/>',
+  file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>',
+  form: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+  external: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  grip: '<circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/>',
+  trash: '<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  copy: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  edit: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+  upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+  folder: '<path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>',
+  save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/>',
+  printer: '<path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
+  info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  auto: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',
+  list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  sliders: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+  checks: '<path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  steps: '<path d="M4 18h5v-5h5V8h6"/><circle cx="20" cy="8" r="1.5" fill="currentColor"/>',
+  flag: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/>',
+  note: '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+  link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>',
+  box: '<rect x="3" y="3" width="18" height="18" rx="2"/>',
+  circle: '<circle cx="12" cy="12" r="9"/>',
+  text: '<path d="M4 7V4h16v3M9 20h6M12 4v16"/>'
+};
+function icon(name, size) {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('viewBox', '0 0 24 24');
+  s.setAttribute('class', 'i');
+  s.setAttribute('aria-hidden', 'true');
+  s.innerHTML = ICONS[name] || ''; // static icon markup only, never user text
+  if (size) s.style.fontSize = size + 'px';
+  return s;
+}
+const ibtn = (name, title, fn, disabled = false, cls = '') =>
+  h('button', { class: 'icon-btn ' + cls, type: 'button', title, 'aria-label': title, disabled, onclick: fn }, icon(name));
+
 /* ───────────── Render core ───────────── */
 function render() {
   const a = document.activeElement;
   const fk = a && a.dataset ? a.dataset.fk : null;
   let s0 = null, s1 = null;
   try { s0 = a.selectionStart; s1 = a.selectionEnd; } catch (e) { /* not a text field */ }
-  // A done step stays open while you are typing in it.
-  if (a && a.dataset && a.dataset.step && (a.tagName === 'TEXTAREA' || a.type === 'text')) view.expanded.add(a.dataset.step);
   const y = window.scrollY;
 
   applyTheme();
@@ -665,13 +889,32 @@ function render() {
       if (!focusNew && s0 != null) { try { n.setSelectionRange(s0, s1); } catch (e) { /* ignore */ } }
     }
   }
+  if (view.scrollToPanel) {
+    view.scrollToPanel = false;
+    const panel = document.querySelector('.step-panel, .editor');
+    if (panel) {
+      const top = panel.getBoundingClientRect().top;
+      if (top < 64 || top > window.innerHeight * 0.6) window.scrollTo(0, Math.max(0, top + window.scrollY - 76));
+    }
+  }
 }
 function applyTheme() {
   const t = state.ui.theme;
   if (t === 'auto') document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme', t);
-  $('#themeBtn').textContent = t === 'auto' ? '◐ Auto' : t === 'light' ? '☀ Light' : '☾ Dark';
+  const b = $('#themeBtn');
+  const label = t === 'auto' ? 'Theme: automatic' : t === 'light' ? 'Theme: light' : 'Theme: dark';
+  b.replaceChildren(icon(t === 'auto' ? 'auto' : t === 'light' ? 'sun' : 'moon'));
+  b.title = label + ' (click to change)';
+  b.setAttribute('aria-label', label);
 }
+const pageHead = (title, sub, actions) => h('div', { class: 'page-head' },
+  h('div', {}, h('h1', {}, title), sub ? h('p', {}, sub) : null), actions ? h('div', { class: 'btn-row' }, actions) : null);
+const progressBar = (d, n, cls = '') => {
+  const fill = h('div', {});
+  fill.style.width = (n ? Math.round(d / n * 100) : 0) + '%';
+  return h('div', { class: 'bar ' + cls, role: 'progressbar', 'aria-label': 'Progress', 'aria-valuemin': 0, 'aria-valuemax': n, 'aria-valuenow': d }, fill);
+};
 
 /* ───────────── PAGE 1: SETUP ───────────── */
 function touchSetup() { const t = activeSetup(); t.updatedAt = now(); saveSetups(); }
@@ -679,125 +922,452 @@ function mutate(fn) { fn(); touchSetup(); render(); }
 
 function renderSetup() {
   const tpl = activeSetup();
-  const sel = h('select', { id: 'tplSelect', 'aria-label': 'Setup template', value: tpl.id,
-    onchange: e => { state.activeSetupId = e.target.value; saveSetups(); render(); } },
-    state.setups.map(s => h('option', { value: s.id }, s.name)));
-  const bar = h('section', { class: 'card toolbar' },
-    h('div', { class: 'row wrap' },
-      h('label', { class: 'lbl', for: 'tplSelect' }, 'Setup'), sel,
-      h('div', { class: 'btn-group' },
-        btn('New', newSetup), btn('Duplicate', dupSetup), btn('Rename', renameSetup), btn('Delete', deleteSetup, 'danger'))),
-    h('div', { class: 'row wrap between' },
-      h('div', { class: 'btn-group' },
-        btn('⬇ Export setup', exportSetup), btn('⬆ Import setup', () => $('#fileSetup').click())),
-      h('span', { class: 'saved', id: 'savedSetup', 'aria-live': 'polite' }, savedText(lastSetupSaved))),
-    h('p', { class: 'hint' }, 'Every change saves automatically in this browser. Projects already started keep their own copy of the setup, so edits here only affect new projects.'));
+  let idx = tpl.steps.findIndex(s => s.id === view.setupSel);
+  if (idx < 0) idx = 0;
+  const sel = tpl.steps[idx];
+  view.setupSel = sel ? sel.id : null;
 
-  const steps = tpl.steps.length
-    ? tpl.steps.map((s, i) => stepEditor(tpl, s, i))
-    : h('p', { class: 'card empty' }, 'No steps yet. Add the first one below.');
-  $('#page-setup').replaceChildren(bar, h('div', {}, steps),
-    btn('+ Add step', () => mutate(() => { const s = blankStep(); tpl.steps.push(s); view.focusNext = `s-${s.id}-topic`; }), 'primary add-step'));
+  const tplSel = h('select', { id: 'tplSelect', 'aria-label': 'Setup template', value: tpl.id,
+    onchange: e => { state.activeSetupId = e.target.value; view.setupSel = null; saveSetups(); render(); } },
+    state.setups.map(s => h('option', { value: s.id }, s.name)));
+  const bar = h('div', { class: 'panel tpl-bar' },
+    h('div', { class: 'tpl-select' }, h('label', { class: 'field-label', for: 'tplSelect' }, 'Template'), tplSel,
+      h('div', { class: 'btn-row tight' },
+        ibtn('plus', 'New setup', newSetup), ibtn('copy', 'Duplicate setup', dupSetup),
+        ibtn('edit', 'Rename setup', renameSetup), ibtn('trash', 'Delete setup', deleteSetup, false, 'danger'))),
+    h('div', { class: 'btn-row' },
+      btn([icon('upload'), 'Import setup'], () => $('#fileSetup').click()),
+      btn([icon('download'), 'Export setup'], exportSetup)));
+
+  const list = h('ol', { class: 'step-list' }, tpl.steps.map((s, i) => setupListItem(tpl, s, i, i === idx)));
+  const side = h('aside', { class: 'panel sticky-side' },
+    h('div', { class: 'panel-head' }, h('h3', {}, 'Steps'), h('span', { class: 'count' }, tpl.steps.length)),
+    tpl.steps.length ? list : h('div', { class: 'none-yet', style: 'padding:14px 18px' }, 'No steps yet.'),
+    h('div', { class: 'side-foot' }, btn([icon('plus'), 'Add step'], () => mutate(() => {
+      const s = blankStep();
+      tpl.steps.push(s);
+      view.setupSel = s.id;
+      view.focusNext = `s-${s.id}-topic`;
+    }), 'primary')));
+
+  $('#page-setup').replaceChildren(
+    pageHead('Setup', 'Design the step-by-step template that new projects follow.'),
+    bar,
+    h('div', { class: 'hint-line' }, icon('info'), 'Changes save automatically. Projects that already started keep their own copy, so edits here only affect new projects.'),
+    h('div', { class: 'split' }, side,
+      sel ? stepEditor(tpl, sel, idx)
+        : h('div', { class: 'panel empty' }, h('div', { class: 'empty-ic' }, icon('list')), h('h3', {}, 'No steps'), 'Add the first step to start building this setup.')));
 }
 
-function stepEditor(tpl, s, i) {
-  const n = tpl.steps.length;
-  const collapsed = view.setupCollapsed.has(s.id);
-  const card = h('section', { class: 'card step-edit' + (collapsed ? ' collapsed' : ''), 'aria-label': `Step ${i + 1}` });
-
-  // Drag & drop reordering (via the ⠿ handle); up/down buttons work everywhere including touch.
-  const handle = h('span', { class: 'handle', draggable: 'true', title: 'Drag to reorder', 'aria-hidden': 'true' }, '⠿');
-  handle.addEventListener('dragstart', e => {
+function setupListItem(tpl, s, i, on) {
+  const li = h('li', { class: 'sl-item' + (on ? ' on' : ''), draggable: 'true', dataset: { sl: s.id } },
+    h('button', { class: 'sl-btn', type: 'button', 'aria-current': on ? 'true' : null,
+      onclick: () => { view.setupSel = s.id; view.scrollToPanel = window.innerWidth <= 900; render(); } },
+      h('span', { class: 'sl-grip', title: 'Drag to reorder' }, icon('grip')),
+      h('span', { class: 'num' }, i + 1),
+      h('span', { class: 'sl-text' },
+        h('span', { class: 'sl-title' + (s.topic.trim() ? '' : ' untitled') }, s.topic.trim() || 'Untitled step'),
+        h('span', { class: 'sl-sub' }, `${s.todos.length} to-do · ${s.docs.length + s.forms.length} link${s.docs.length + s.forms.length === 1 ? '' : 's'}`))));
+  li.addEventListener('dragstart', e => {
     view.dragIdx = i;
     e.dataTransfer.effectAllowed = 'move';
-    try { e.dataTransfer.setData('text/plain', String(i)); e.dataTransfer.setDragImage(card, 20, 20); } catch (err) { /* ignore */ }
-    card.classList.add('dragging');
+    try { e.dataTransfer.setData('text/plain', String(i)); } catch (err) { /* ignore */ }
+    li.classList.add('dragging');
   });
-  handle.addEventListener('dragend', () => {
+  li.addEventListener('dragend', () => {
     view.dragIdx = null;
     document.querySelectorAll('.dragging,.drop-target').forEach(x => x.classList.remove('dragging', 'drop-target'));
   });
-  card.addEventListener('dragover', e => { if (view.dragIdx == null) return; e.preventDefault(); card.classList.add('drop-target'); });
-  card.addEventListener('dragleave', e => { if (!card.contains(e.relatedTarget)) card.classList.remove('drop-target'); });
-  card.addEventListener('drop', e => {
+  li.addEventListener('dragover', e => { if (view.dragIdx == null) return; e.preventDefault(); li.classList.add('drop-target'); });
+  li.addEventListener('dragleave', e => { if (!li.contains(e.relatedTarget)) li.classList.remove('drop-target'); });
+  li.addEventListener('drop', e => {
     if (view.dragIdx == null) return;
     e.preventDefault();
     const from = view.dragIdx;
     view.dragIdx = null;
     if (from !== i) mutate(() => move(tpl.steps, from, i)); else render();
   });
+  return li;
+}
 
-  card.append(h('div', { class: 'step-head' },
-    handle,
-    h('span', { class: 'step-num' }, `Step ${i + 1}`),
-    h('input', { type: 'text', class: 'topic-input grow', placeholder: 'Step topic', value: s.topic, autocomplete: 'off',
-      'aria-label': `Step ${i + 1} topic`, dataset: { fk: `s-${s.id}-topic` },
-      oninput: e => { s.topic = e.target.value; touchSetup(); } }),
-    h('div', { class: 'btn-group tight' },
-      iconBtn('↑', 'Move step up', () => mutate(() => move(tpl.steps, i, i - 1)), i === 0),
-      iconBtn('↓', 'Move step down', () => mutate(() => move(tpl.steps, i, i + 1)), i === n - 1),
-      iconBtn(collapsed ? '▸' : '▾', collapsed ? 'Expand step' : 'Collapse step', () => {
-        collapsed ? view.setupCollapsed.delete(s.id) : view.setupCollapsed.add(s.id);
-        render();
-      }),
-      iconBtn('🗑', 'Delete step', async () => {
-        if (await confirmBox('Delete step?', `Delete step ${i + 1} "${s.topic || 'Untitled'}" from this setup?`))
-          mutate(() => tpl.steps.splice(tpl.steps.indexOf(s), 1));
-      }, false, 'danger'))));
-  if (collapsed) return card;
+function stepEditor(tpl, s, i) {
+  const n = tpl.steps.length;
+  const setTitle = v => {
+    s.topic = v;
+    touchSetup();
+    const t = document.querySelector(`[data-sl="${CSS.escape(s.id)}"] .sl-title`);
+    if (t) { t.textContent = v.trim() || 'Untitled step'; t.classList.toggle('untitled', !v.trim()); }
+  };
+  const section = (ic, title, count, body, add) => h('div', { class: 'ed-section' },
+    h('div', { class: 'ed-section-head' }, h('h3', {}, icon(ic), title, h('span', { class: 'count' }, count)), add), body);
 
-  const section = (title, items, addBtn) => h('div', {},
-    h('div', { class: 'section-title' }, h('h4', {}, title), addBtn), items);
-
-  card.append(h('div', { class: 'step-body' },
-    section('To-do list', s.todos.map((t, j) => todoEditor(s, t, j)),
-      btn('+ Add to-do', () => mutate(() => { const t = blankTodo(); s.todos.push(t); view.focusNext = `t-${t.id}-label`; }), 'small')),
-    section('Documentation links', s.docs.map((l, j) => linkEditor(s.docs, l, j)),
-      btn('+ Add link', () => mutate(() => { const l = blankLink('dl'); s.docs.push(l); view.focusNext = `l-${l.id}-label`; }), 'small')),
-    section('Loaded forms', s.forms.map((l, j) => linkEditor(s.forms, l, j)),
-      btn('+ Add form', () => mutate(() => { const l = blankLink('fl'); s.forms.push(l); view.focusNext = `l-${l.id}-label`; }), 'small')),
-    h('label', { class: 'field' },
-      h('span', { class: 'sub' }, 'Default note (optional, shown as a hint on the Work page)'),
-      h('textarea', { rows: 2, value: s.note, placeholder: 'Instructions for this step…', dataset: { fk: `s-${s.id}-note` },
-        oninput: e => { s.note = e.target.value; touchSetup(); } }))));
-  return card;
+  return h('section', { class: 'panel editor', 'aria-label': `Edit step ${i + 1}` },
+    h('div', { class: 'ed-head' },
+      h('div', { class: 'eyebrow' }, `Step ${i + 1} of ${n}`),
+      h('div', { class: 'btn-row tight' },
+        ibtn('up', 'Move step up', () => mutate(() => move(tpl.steps, i, i - 1)), i === 0),
+        ibtn('down', 'Move step down', () => mutate(() => move(tpl.steps, i, i + 1)), i === n - 1),
+        ibtn('trash', 'Delete step', async () => {
+          if (!await confirmBox('Delete step?', `Delete step ${i + 1} "${s.topic || 'Untitled'}" from this setup?`)) return;
+          mutate(() => { tpl.steps.splice(tpl.steps.indexOf(s), 1); const nx = tpl.steps[Math.min(i, tpl.steps.length - 1)]; view.setupSel = nx ? nx.id : null; });
+        }, false, 'danger'))),
+    h('div', { class: 'ed-body' },
+      h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Step title'),
+        h('input', { type: 'text', class: 'title-input', placeholder: 'e.g. Kick-off meeting', value: s.topic, autocomplete: 'off',
+          dataset: { fk: `s-${s.id}-topic` }, oninput: e => setTitle(e.target.value) })),
+      h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Instructions'),
+        h('textarea', { rows: 3, value: s.note, placeholder: 'What should the person do in this step? (optional)', dataset: { fk: `s-${s.id}-note` },
+          oninput: e => { s.note = e.target.value; touchSetup(); } }),
+        h('span', { class: 'field-hint' }, 'Shown at the top of the step on the Work page, and as a hint in the notes box.')),
+      section('checks', 'To-do list', s.todos.length,
+        s.todos.length ? s.todos.map((t, j) => todoEditor(s, t, j)) : h('div', { class: 'none-yet' }, 'No to-do items yet.'),
+        btn([icon('plus'), 'Add to-do'], () => mutate(() => { const t = blankTodo(); s.todos.push(t); view.focusNext = `t-${t.id}-label`; }), 'sm')),
+      section('file', 'Documentation', s.docs.length,
+        s.docs.length ? s.docs.map((l, j) => linkEditor(s.docs, l, j, 'doc')) : h('div', { class: 'none-yet' }, 'No documentation links.'),
+        btn([icon('plus'), 'Add link'], () => mutate(() => { const l = blankLink('dl'); s.docs.push(l); view.focusNext = `l-${l.id}-label`; }), 'sm')),
+      section('form', 'Forms', s.forms.length,
+        s.forms.length ? s.forms.map((l, j) => linkEditor(s.forms, l, j, 'form')) : h('div', { class: 'none-yet' }, 'No form links.'),
+        btn([icon('plus'), 'Add form'], () => mutate(() => { const l = blankLink('fl'); s.forms.push(l); view.focusNext = `l-${l.id}-label`; }), 'sm'))));
 }
 
 function todoEditor(s, t, j) {
   const n = s.todos.length;
-  const mark = k => t.type === 'multi' ? '☐' : t.type === 'single' ? '◯' : t.type === 'multitext' ? '▭' : `${k + 1}.`;
   const word = t.type === 'multitext' ? 'Box' : 'Option';
-  return h('div', { class: 'todo-edit' },
-    h('div', { class: 'todo-main' },
+  const markIc = t.type === 'multi' ? 'box' : t.type === 'single' ? 'circle' : t.type === 'multitext' ? 'text' : null;
+  return h('div', { class: 'te' },
+    h('div', { class: 'te-main' },
+      h('span', { class: 'te-num' }, j + 1),
       h('input', { type: 'text', placeholder: 'To-do or question', value: t.label, autocomplete: 'off', 'aria-label': 'To-do label',
         dataset: { fk: `t-${t.id}-label` }, oninput: e => { t.label = e.target.value; touchSetup(); } }),
       h('select', { 'aria-label': 'Answer type', value: t.type, onchange: e => mutate(() => {
         t.type = e.target.value;
         if (hasOptions(t.type) && !t.options.length) t.options = t.type === 'multitext' ? ['Box 1', 'Box 2'] : ['Option 1', 'Option 2'];
       }) }, Object.entries(TYPES).map(([k, v]) => h('option', { value: k }, v))),
-      h('label', { class: 'req' },
-        h('input', { type: 'checkbox', checked: t.required, onchange: e => { t.required = e.target.checked; touchSetup(); } }), 'Required'),
-      h('div', { class: 'btn-group tight' },
-        iconBtn('↑', 'Move to-do up', () => mutate(() => move(s.todos, j, j - 1)), j === 0),
-        iconBtn('↓', 'Move to-do down', () => mutate(() => move(s.todos, j, j + 1)), j === n - 1),
-        iconBtn('🗑', 'Delete to-do', () => mutate(() => s.todos.splice(j, 1)), false, 'danger'))),
-    hasOptions(t.type) ? h('div', { class: 'options' },
+      h('label', { class: 'switch' },
+        h('input', { type: 'checkbox', class: 'sr', checked: t.required, onchange: e => { t.required = e.target.checked; touchSetup(); } }),
+        h('span', { class: 'track', 'aria-hidden': 'true' }), 'Required'),
+      h('div', { class: 'btn-row tight' },
+        ibtn('up', 'Move to-do up', () => mutate(() => move(s.todos, j, j - 1)), j === 0),
+        ibtn('down', 'Move to-do down', () => mutate(() => move(s.todos, j, j + 1)), j === n - 1),
+        ibtn('trash', 'Delete to-do', () => mutate(() => s.todos.splice(j, 1)), false, 'danger'))),
+    hasOptions(t.type) ? h('div', { class: 'te-opts' },
       t.options.map((o, k) => h('div', { class: 'opt' },
-        h('span', { class: 'opt-mark', 'aria-hidden': 'true' }, mark(k)),
-        h('input', { type: 'text', value: o, placeholder: `${word} ${k + 1} label`, autocomplete: 'off', 'aria-label': `${word} ${k + 1}`,
+        h('span', { class: 'opt-mark' }, markIc ? icon(markIc) : `${k + 1}.`),
+        h('input', { type: 'text', value: o, placeholder: `${word} ${k + 1}`, autocomplete: 'off', 'aria-label': `${word} ${k + 1}`,
           dataset: { fk: `o-${t.id}-${k}` }, oninput: e => { t.options[k] = e.target.value; touchSetup(); } }),
-        iconBtn('✕', 'Remove ' + word.toLowerCase(), () => mutate(() => t.options.splice(k, 1)), false, 'danger'))),
-      h('div', {}, btn('+ ' + word, () => mutate(() => { t.options.push(''); view.focusNext = `o-${t.id}-${t.options.length - 1}`; }), 'small'))) : null);
+        ibtn('x', 'Remove ' + word.toLowerCase(), () => mutate(() => t.options.splice(k, 1)), false, 'danger'))),
+      h('div', {}, btn([icon('plus'), 'Add ' + word.toLowerCase()],
+        () => mutate(() => { t.options.push(''); view.focusNext = `o-${t.id}-${t.options.length - 1}`; }), 'sm ghost'))) : null);
 }
 
-function linkEditor(list, l, j) {
-  return h('div', { class: 'link-edit' },
+function linkEditor(list, l, j, kind) {
+  return h('div', { class: 'le' },
+    h('span', { class: 'le-ic' }, icon(kind === 'doc' ? 'file' : 'form')),
     h('input', { type: 'text', placeholder: 'Label', value: l.label, autocomplete: 'off', 'aria-label': 'Link label',
       dataset: { fk: `l-${l.id}-label` }, oninput: e => { l.label = e.target.value; touchSetup(); } }),
-    h('input', { type: 'text', placeholder: 'https://company.sharepoint.com/… or \\\\server\\file', value: l.url, inputmode: 'url', autocomplete: 'off',
-      spellcheck: 'false', autocapitalize: 'off', 'aria-label': 'Link URL or path', dataset: { fk: `l-${l.id}-url` },
+    h('input', { type: 'text', placeholder: 'Link (SharePoint, company page, file…)', value: l.url, autocomplete: 'off',
+      spellcheck: 'false', autocapitalize: 'off', 'aria-label': 'Link', dataset: { fk: `l-${l.id}-url` },
       oninput: e => { l.url = e.target.value; touchSetup(); } }),
-    iconBtn('🗑', 'Remove link', () => mutate(() => list.splice(j, 1)), false, 'danger'));
+    ibtn('trash', 'Remove link', () => mutate(() => list.splice(j, 1)), false, 'danger'));
+}
+
+/* ───────────── PAGE 2: WORK ───────────── */
+function renderWork() {
+  const p = openProjectObj();
+  $('#page-work').replaceChildren(...(p ? projectView(p) : workHome()));
+  // On narrow screens the stepper scrolls sideways: keep the selected step visible.
+  const sp = $('#page-work .stepper'), sel = $('#page-work .sp-item.sel');
+  if (sp && sel && sp.scrollWidth > sp.clientWidth) sp.scrollLeft = Math.max(0, sel.offsetLeft - sp.offsetLeft - 8);
+}
+
+function workHome() {
+  const nameIn = h('input', { type: 'text', id: 'npName', placeholder: 'e.g. ACME onboarding', autocomplete: 'off', dataset: { fk: 'np-name' } });
+  const tplSel = h('select', { id: 'npTpl', value: state.activeSetupId },
+    state.setups.map(s => h('option', { value: s.id }, `${s.name} (${s.steps.length} steps)`)));
+  const create = () => {
+    const name = nameIn.value.trim().slice(0, 200);
+    if (!name) { toast('Enter a project name.', 'error'); nameIn.focus(); return; }
+    const tpl = state.setups.find(s => s.id === tplSel.value);
+    if (!tpl) { toast('Choose a setup template.', 'error'); return; }
+    if (!tpl.steps.length) { toast('That setup has no steps yet. Add steps on the Setup page first.', 'error'); return; }
+    const p = newProject(name, tpl);
+    state.projects.push(p);
+    saveProjects();
+    openProject(p.id);
+  };
+  nameIn.addEventListener('keydown', e => { if (e.key === 'Enter') create(); });
+
+  const projects = [...state.projects].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+  return [
+    pageHead('Projects', `${projects.length} project${projects.length === 1 ? '' : 's'} in this browser`,
+      [btn([icon('folder'), 'Open project file'], () => $('#fileProject').click())]),
+    h('section', { class: 'panel' },
+      h('div', { class: 'panel-head' }, h('h3', {}, 'Start a new project')),
+      h('div', { class: 'panel-body new-proj' },
+        h('label', { class: 'field', for: 'npName' }, h('span', { class: 'field-label' }, 'Project name'), nameIn),
+        h('label', { class: 'field', for: 'npTpl' }, h('span', { class: 'field-label' }, 'Setup template'), tplSel),
+        btn([icon('plus'), 'Create project'], create, 'primary'))),
+    h('section', { class: 'panel' },
+      projects.length ? [
+        h('div', { class: 'pt-head' }, h('span', {}, 'Project'), h('span', {}, 'Progress'), h('span', {}, 'Last updated'), h('span', {})),
+        projects.map(projectRow)
+      ] : h('div', { class: 'empty' }, h('div', { class: 'empty-ic' }, icon('checks')), h('h3', {}, 'No projects yet'),
+        'Create one above, or open a saved project file.'))
+  ];
+}
+
+function projectRow(p) {
+  const n = p.template.steps.length, d = doneCount(p);
+  const stop = fn => e => { e.stopPropagation(); fn(); };
+  return h('div', { class: 'pt-row', onclick: () => openProject(p.id) },
+    h('div', {},
+      h('button', { class: 'pt-name', type: 'button', onclick: stop(() => openProject(p.id)) }, p.name),
+      h('div', { class: 'pt-sub' }, p.template.name)),
+    h('div', { class: 'pt-prog' },
+      h('div', { class: 'pt-prog-top' }, h('span', {}, `${d}/${n} steps`),
+        p.completedAt ? h('span', { class: 'chip ok' }, icon('check'), 'Complete') : h('span', { class: 'chip accent' }, 'In progress')),
+      progressBar(d, n, 'sm')),
+    h('div', { class: 'pt-date' }, fmtDateTime(p.updatedAt)),
+    h('div', { class: 'pt-actions btn-row tight' },
+      ibtn('edit', 'Rename', stop(() => renameProject(p))),
+      ibtn('copy', 'Duplicate', stop(() => duplicateProject(p))),
+      ibtn('trash', 'Delete', stop(() => deleteProject(p)), false, 'danger'),
+      ibtn('chevR', 'Open', stop(() => openProject(p.id)))));
+}
+
+// The step to work on now: the first unlocked step that isn't done.
+function currentIdx(p) {
+  const steps = p.template.steps;
+  for (let i = 0; i <= p.revealedUpTo; i++) if (p.steps[steps[i].id].status !== 'done') return i;
+  return p.revealedUpTo;
+}
+const previewOpen = p => view.previewKey === p.id + ':' + p.revealedUpTo && p.revealedUpTo < p.template.steps.length - 1;
+function selectedIdx(p) {
+  const i = p.template.steps.findIndex(s => s.id === view.sel[p.id]);
+  if (i >= 0 && (i <= p.revealedUpTo || (i === p.revealedUpTo + 1 && previewOpen(p)))) return i;
+  return currentIdx(p);
+}
+function selectStep(p, i) { view.sel[p.id] = p.template.steps[i].id; view.scrollToPanel = true; render(); }
+const reqStats = (s, st) => {
+  const req = s.todos.filter(t => t.required);
+  return { total: req.length, done: req.filter(t => todoDone(t, st.answers[t.id])).length };
+};
+
+function projectView(p) {
+  const steps = p.template.steps, n = steps.length, d = doneCount(p);
+  const si = selectedIdx(p);
+  view.sel[p.id] = steps[si].id; // keep showing this step until the user (or a finished click) moves on
+  const isPreview = si > p.revealedUpTo;
+  const head = h('div', {},
+    h('button', { class: 'crumb', type: 'button', onclick: closeProject }, icon('chevL'), 'All projects'),
+    h('div', { class: 'proj-top' },
+      h('div', {},
+        h('h1', {}, p.name),
+        h('div', { class: 'proj-meta' }, h('span', {}, p.template.name), h('span', {}, '·'), h('span', {}, `Started ${fmtDateTime(p.createdAt)}`))),
+      h('div', { class: 'btn-row' },
+        btn([icon('list'), 'Summary'], () => { state.ui.tab = 'summary'; saveUi(); render(); window.scrollTo(0, 0); }),
+        ibtn('edit', 'Rename project', () => renameProject(p), false, 'bordered'),
+        btn([icon('folder'), 'Open file'], () => $('#fileProject').click()),
+        btn([icon('save'), 'Save project'], () => saveProjectFile(p), 'primary'))),
+    h('div', { class: 'panel progress-card' },
+      h('div', { class: 'progress-top' }, h('span', {}, `Step ${d} of ${n} complete`), h('span', { class: 'pct' }, Math.round(d / n * 100) + '%')),
+      progressBar(d, n)));
+
+  return [head, h('div', { class: 'split' },
+    h('aside', { class: 'panel sticky-side', 'aria-label': 'Steps' }, stepper(p, si)),
+    h('div', {},
+      p.completedAt ? h('div', { class: 'done-banner', role: 'status' }, h('span', { class: 'ic' }, icon('flag')),
+        h('div', {}, h('strong', {}, 'Project complete'), `Finished ${fmtDateTime(p.completedAt)}`)) : null,
+      stepPanel(p, si, isPreview)))];
+}
+
+function stepper(p, si) {
+  const steps = p.template.steps, r = p.revealedUpTo, n = steps.length, cur = currentIdx(p);
+  const open = previewOpen(p);
+  const item = (i, preview) => {
+    const s = steps[i], st = p.steps[s.id];
+    const state_ = preview ? 's-locked' : st.status === 'done' ? 's-done' : i === cur ? 's-current' : 's-open';
+    const rs = reqStats(s, st);
+    const sub = preview ? 'Locked · preview'
+      : st.status === 'done' ? `Done${st.completedAt ? ' · ' + fmtTime(st.completedAt) : ''}`
+      : rs.total ? `${rs.done} of ${rs.total} required done` : 'In progress';
+    const lineDone = st.status === 'done' && !preview && i < r;
+    return h('li', { class: `sp-item ${state_}` + (i === si ? ' sel' : '') + (lineDone ? ' line-done' : '') },
+      h('button', { class: 'sp-btn', type: 'button', 'aria-current': i === si ? 'step' : null, onclick: () => selectStep(p, i) },
+        h('span', { class: 'circle' }, preview ? icon('lock') : st.status === 'done' ? icon('check') : i + 1),
+        h('span', { class: 'sp-text' }, h('span', { class: 'sp-title' }, s.topic || 'Untitled step'), h('span', { class: 'sp-sub' }, sub))));
+  };
+  const items = [];
+  for (let i = 0; i <= r; i++) items.push(item(i, false));
+  if (r < n - 1) {
+    if (open) items.push(item(r + 1, true));
+    items.push(h('li', { class: 'sp-more' },
+      h('button', { class: 'add-preview', type: 'button', 'aria-expanded': String(open),
+        onclick: () => {
+          if (open) { view.previewKey = null; if (si === r + 1) delete view.sel[p.id]; render(); }
+          else { view.previewKey = p.id + ':' + r; selectStep(p, r + 1); }
+        } },
+        h('span', { class: 'plus' }, icon(open ? 'x' : 'plus')), open ? 'Hide preview' : 'Preview next step')));
+    const hidden = n - r - 1 - (open ? 1 : 0);
+    if (hidden > 0) items.push(h('li', { class: 'locked-count' }, `${hidden} more step${hidden === 1 ? '' : 's'} locked`));
+  }
+  return h('ol', { class: 'stepper' }, items);
+}
+
+function stepPanel(p, i, preview) {
+  const steps = p.template.steps, s = steps[i], st = p.steps[s.id], n = steps.length, r = p.revealedUpTo;
+  const done = st.status === 'done' && !preview;
+  const rs = reqStats(s, st);
+  const chip = preview ? h('span', { class: 'chip' }, icon('lock'), 'Locked')
+    : done ? h('span', { class: 'chip ok' }, icon('check'), 'Done')
+    : h('span', { class: 'chip accent' }, 'In progress');
+
+  // Footer navigation
+  let next;
+  if (preview) next = h('span', { class: 'foot-hint' }, icon('lock'), `Complete step ${r + 1} to unlock`);
+  else if (i < r) next = btn(['Next step', icon('chevR')], () => selectStep(p, i + 1), done ? 'primary' : '');
+  else if (i < n - 1) next = h('span', { class: 'foot-hint' }, icon('lock'), 'Finish the required items to unlock the next step');
+  else next = p.completedAt ? h('span', { class: 'chip ok' }, icon('flag'), 'All steps complete') : h('span', { class: 'foot-hint' }, 'Last step');
+
+  return h('section', { class: 'panel step-panel' + (preview ? ' preview' : ''), 'aria-label': `Step ${i + 1}: ${s.topic || 'Untitled step'}` },
+    h('div', { class: 'hero' },
+      h('div', { class: 'eyebrow' }, `Step ${i + 1} of ${n}`),
+      h('div', { class: 'hero-row' },
+        // Not clickable: ticks itself when all required to-do items are done.
+        h('span', { class: 'tick' + (done ? ' on' : ''), role: 'checkbox', 'aria-checked': String(done), 'aria-disabled': 'true',
+          'aria-label': done ? 'Step complete' : 'Step not complete', title: 'Ticks automatically when all required to-do items are done' }, icon('check')),
+        h('h2', {}, s.topic || 'Untitled step'), chip)),
+    preview ? h('div', { class: 'locked-note' }, icon('lock'), `Preview only — this step unlocks when step ${r + 1} is complete.`) : null,
+    s.note.trim() ? h('div', { class: 'instruction' }, icon('info'), h('div', {}, h('div', { class: 't' }, 'Instructions'), h('p', {}, s.note))) : null,
+    h('div', { class: 'sec' },
+      h('div', { class: 'sec-head' }, h('h3', {}, icon('checks'), 'To-do list'),
+        rs.total ? h('span', { class: 'sec-meta' + (rs.done === rs.total ? ' ok' : '') }, `${rs.done} of ${rs.total} required done`) : null),
+      s.todos.length ? h('ul', { class: 'checklist' }, s.todos.map(t => todoRow(p, s, t, preview)))
+        : h('div', { class: 'none-yet' }, 'No to-do items in this step.')),
+    (s.docs.length || s.forms.length) ? h('div', { class: 'sec' },
+      h('div', { class: 'sec-head' }, h('h3', {}, icon('link'), 'Documents & forms')),
+      h('div', { class: 'res-grid' }, s.docs.map(l => resTile(l, 'doc')), s.forms.map(l => resTile(l, 'form')))) : null,
+    h('div', { class: 'sec' },
+      h('div', { class: 'sec-head' }, h('h3', {}, icon('note'), 'Notes')),
+      h('textarea', { rows: 4, value: st.note, disabled: preview, autocomplete: 'off', 'aria-label': 'Notes for this step',
+        placeholder: s.note.trim() || 'Write notes for this step…', dataset: { fk: `n-${p.id}-${s.id}` },
+        oninput: e => { st.note = e.target.value; p.updatedAt = now(); saveProjects(); } })),
+    h('div', { class: 'step-foot' },
+      i > 0 ? btn([icon('chevL'), 'Previous'], () => selectStep(p, i - 1), 'ghost') : h('span', {}),
+      next));
+}
+
+function resTile(l, kind) {
+  // Links are used exactly as typed in Setup.
+  const inner = [
+    h('span', { class: 'res-ic ' + kind }, icon(kind === 'doc' ? 'file' : 'form')),
+    h('span', { class: 'res-text' }, h('span', { class: 'res-label' }, l.label || l.url || '(no link)'),
+      h('span', { class: 'res-kind' }, kind === 'doc' ? 'Documentation' : 'Form'))
+  ];
+  return l.url ? h('a', { class: 'res', href: l.url, target: '_blank', title: l.url }, inner, h('span', { class: 'res-go' }, icon('external')))
+    : h('div', { class: 'res' }, inner);
+}
+
+function todoRow(p, s, t, disabled) {
+  const st = p.steps[s.id];
+  const a = st.answers[t.id];
+  const done = todoDone(t, a);
+  const label = t.label || '(untitled)';
+  const req = t.required ? h('span', { class: 'req' }, 'Required') : null;
+  const set = v => { st.answers[t.id] = v; answerChanged(p, s); };
+  const cls = 'ci' + (done ? ' done' : '') + (disabled ? ' ro' : '');
+  const noOpts = t.options.length ? null : h('div', { class: 'none-yet' }, t.type === 'multitext' ? '(no text boxes defined)' : '(no options defined)');
+  const row = (...body) => h('li', { class: cls },
+    h('span', { class: 'ci-dot', 'aria-hidden': 'true' }, icon('check')),
+    h('div', { class: 'ci-body' }, h('div', { class: 'ci-head' }, h('span', { class: 'ci-label' }, label), req), ...body));
+  const optChip = (type, on, text, onchange) => h('label', { class: 'opt-chip' + (on ? ' on' : '') },
+    h('input', { type, class: 'sr', name: type === 'radio' ? `r-${p.id}-${t.id}` : null, checked: on, disabled, onchange }),
+    h('span', { class: 'mk' + (type === 'radio' ? ' round' : ''), 'aria-hidden': 'true' }, type === 'radio' ? null : icon('check')), text);
+
+  switch (t.type) {
+    case 'checkbox':
+      return h('li', { class: cls + ' check' },
+        h('label', { class: 'ci-check' },
+          h('input', { type: 'checkbox', class: 'sr', checked: a === true, disabled, onchange: e => set(e.target.checked) }),
+          h('span', { class: 'box', 'aria-hidden': 'true' }, icon('check')),
+          h('span', { class: 'ci-head' }, h('span', { class: 'ci-label' }, label), req)));
+    case 'multi': {
+      const cur = arr(a);
+      return row(h('div', { class: 'chips', role: 'group', 'aria-label': label }, t.options.map(o => optChip('checkbox', cur.includes(o), o, e => {
+        const sel = new Set(arr(st.answers[t.id]));
+        e.target.checked ? sel.add(o) : sel.delete(o);
+        set(t.options.filter(x => sel.has(x)));
+      })), noOpts));
+    }
+    case 'single':
+      return row(h('div', { class: 'chips', role: 'radiogroup', 'aria-label': label }, t.options.map(o => optChip('radio', a === o, o, () => set(o))), noOpts),
+        a && !disabled ? h('button', { class: 'linkish', type: 'button', onclick: () => set('') }, 'Clear choice') : null);
+    case 'dropdown':
+      return row(h('select', { class: 'ci-select', value: a || '', disabled, 'aria-label': label, onchange: e => set(e.target.value) },
+        h('option', { value: '' }, 'Select…'), t.options.map(o => h('option', { value: o }, o))));
+    case 'multitext': {
+      const cur = arr(a);
+      return row(h('div', { class: 'mt-grid' }, t.options.map((o, k) => {
+        const inp = h('input', { type: 'text', value: cur[k] || '', disabled, autocomplete: 'off', placeholder: o, dataset: { fk: `a-${p.id}-${t.id}-${k}` } });
+        inp.addEventListener('input', e => { if (!e.isComposing) textChanged(p, s, t, inp, k); else st.answers[t.id][k] = inp.value; });
+        inp.addEventListener('compositionend', () => textChanged(p, s, t, inp, k));
+        return h('label', { class: 'field' }, h('span', { class: 'field-label' }, o), inp);
+      }), noOpts));
+    }
+    default: { // short text
+      const inp = h('input', { type: 'text', class: 'ci-text', value: a || '', disabled, autocomplete: 'off', placeholder: 'Type your answer',
+        'aria-label': label, dataset: { fk: `a-${p.id}-${t.id}` } });
+      // Don't redraw while an input method (IME, e.g. Thai) is composing; finish on compositionend.
+      inp.addEventListener('input', e => { if (!e.isComposing) textChanged(p, s, t, inp); else st.answers[t.id] = inp.value; });
+      inp.addEventListener('compositionend', () => textChanged(p, s, t, inp));
+      return row(inp);
+    }
+  }
+}
+
+function afterStepChange(p, s, wasDone, advance) {
+  const i = p.template.steps.indexOf(s);
+  if (wasDone || p.steps[s.id].status !== 'done') return;
+  if (p.completedAt) { toast('All steps complete — project finished!', 'ok'); return; }
+  const cur = currentIdx(p);
+  if (cur !== i && p.steps[p.template.steps[cur].id].status !== 'done') {
+    if (advance) { view.sel[p.id] = p.template.steps[cur].id; view.scrollToPanel = true; }
+    toast(advance ? `Step ${i + 1} complete — on to step ${cur + 1}.` : `Step ${i + 1} complete — click "Next step" to continue.`, 'ok');
+  } else toast(`Step ${i + 1} complete.`, 'ok');
+}
+function answerChanged(p, s) {
+  const wasDone = p.steps[s.id].status === 'done';
+  recompute(p);
+  p.updatedAt = now();
+  saveProjects();
+  afterStepChange(p, s, wasDone, true);
+  render();
+}
+function textChanged(p, s, t, inp, k = null) {
+  const st = p.steps[s.id];
+  if (k == null) st.answers[t.id] = inp.value.slice(0, 5000);
+  else st.answers[t.id][k] = inp.value.slice(0, 5000);
+  const wasDone = st.status === 'done';
+  const before = statusSig(p);
+  recompute(p);
+  p.updatedAt = now();
+  saveProjects();
+  if (statusSig(p) !== before) { afterStepChange(p, s, wasDone, false); render(); }
+  else inp.closest('.ci').classList.toggle('done', todoDone(t, st.answers[t.id]));
+}
+
+function openProject(id) {
+  state.ui.openProjectId = id;
+  state.ui.tab = 'work';
+  delete view.sel[id];
+  view.previewKey = null;
+  saveUi();
+  render();
+  window.scrollTo(0, 0);
+}
+function closeProject() {
+  state.ui.openProjectId = null;
+  saveUi(); render(); window.scrollTo(0, 0);
 }
 
 async function newSetup() {
@@ -869,228 +1439,7 @@ async function importSetupFile(file) {
   }
 }
 
-/* ───────────── PAGE 2: WORK ───────────── */
-function renderWork() {
-  const p = openProjectObj();
-  $('#page-work').replaceChildren(...(p ? projectView(p) : workHome()));
-}
 
-function workHome() {
-  const nameIn = h('input', { type: 'text', id: 'npName', placeholder: 'e.g. ACME onboarding', autocomplete: 'off', dataset: { fk: 'np-name' } });
-  const tplSel = h('select', { id: 'npTpl', value: state.activeSetupId },
-    state.setups.map(s => h('option', { value: s.id }, `${s.name} (${s.steps.length} steps)`)));
-  const create = () => {
-    const name = nameIn.value.trim().slice(0, 200);
-    if (!name) { toast('Enter a project name.', 'error'); nameIn.focus(); return; }
-    const tpl = state.setups.find(s => s.id === tplSel.value);
-    if (!tpl) { toast('Choose a setup template.', 'error'); return; }
-    if (!tpl.steps.length) { toast('That setup has no steps yet. Add steps on the Setup page first.', 'error'); return; }
-    const p = newProject(name, tpl);
-    state.projects.push(p);
-    saveProjects();
-    openProject(p.id);
-  };
-  nameIn.addEventListener('keydown', e => { if (e.key === 'Enter') create(); });
-
-  const projects = [...state.projects].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
-  return [
-    h('section', { class: 'card' },
-      h('div', { class: 'row wrap between' }, h('h2', {}, 'New project'), btn('📂 Open project file', () => $('#fileProject').click())),
-      h('div', { class: 'np-grid' },
-        h('label', { class: 'field', for: 'npName' }, h('span', { class: 'sub' }, 'Project name'), nameIn),
-        h('label', { class: 'field', for: 'npTpl' }, h('span', { class: 'sub' }, 'Setup template'), tplSel),
-        btn('Create project', create, 'primary'))),
-    h('section', { class: 'card' },
-      h('h2', {}, `Projects in this browser (${projects.length})`),
-      projects.length
-        ? h('ul', { class: 'proj-list' }, projects.map(projectRow))
-        : h('p', { class: 'empty' }, 'No projects yet. Create one above, or open a saved project file.'))
-  ];
-}
-
-function projectRow(p) {
-  const n = p.template.steps.length, d = doneCount(p);
-  const bar = h('i', {});
-  bar.style.width = (n ? Math.round(d / n * 100) : 0) + '%';
-  return h('li', { class: 'proj-row' },
-    h('div', { class: 'proj-info' },
-      h('button', { class: 'linklike', type: 'button', onclick: () => openProject(p.id) }, p.name),
-      p.completedAt ? h('span', { class: 'badge' }, 'Complete') : null,
-      h('div', { class: 'meta' }, p.template.name, ' · ', h('span', { class: 'mini', 'aria-hidden': 'true' }, bar), `${d}/${n}`,
-        ' · Updated ', fmtDateTime(p.updatedAt))),
-    h('div', { class: 'btn-group' },
-      btn('Open', () => openProject(p.id), 'small primary'),
-      btn('Rename', () => renameProject(p), 'small'),
-      btn('Duplicate', () => duplicateProject(p), 'small'),
-      btn('Delete', () => deleteProject(p), 'small danger')));
-}
-
-function projectView(p) {
-  const steps = p.template.steps, n = steps.length, r = p.revealedUpTo, d = doneCount(p);
-  const fill = h('div', {});
-  fill.style.width = Math.round(d / n * 100) + '%';
-  const out = [h('section', { class: 'card' },
-    h('div', { class: 'row wrap between' },
-      btn('← Projects', closeProject, 'ghost'),
-      h('div', { class: 'btn-group' },
-        btn('💾 Save project', () => saveProjectFile(p), 'primary'),
-        btn('📂 Open project file', () => $('#fileProject').click()),
-        btn('📋 Summary', () => { state.ui.tab = 'summary'; saveUi(); render(); window.scrollTo(0, 0); }),
-        btn('Rename', () => renameProject(p)))),
-    h('h2', { class: 'proj-title' }, p.name),
-    h('div', { class: 'meta' }, `Setup: ${p.template.name} · Started ${fmtDateTime(p.createdAt)} · `,
-      h('span', { class: 'saved', id: 'savedWork', 'aria-live': 'polite' }, savedText(lastProjectSaved))),
-    h('div', { class: 'progress', role: 'progressbar', 'aria-label': 'Project progress', 'aria-valuemin': 0, 'aria-valuemax': n, 'aria-valuenow': d }, fill),
-    h('div', { class: 'progress-label' }, `Step ${d} of ${n} complete`))];
-
-  if (p.completedAt) out.push(h('div', { class: 'complete', role: 'status' },
-    h('strong', {}, '🎉 Project complete'), `Finished ${fmtDateTime(p.completedAt)}`));
-
-  for (let i = 0; i <= r; i++) out.push(stepCard(p, i, false));
-  if (r < n - 1) {
-    const key = p.id + ':' + r, open = view.previewKey === key;
-    out.push(h('div', { class: 'reveal' },
-      h('button', { class: 'plus', type: 'button', 'aria-expanded': String(open),
-        'aria-label': open ? 'Hide next step preview' : 'Preview next step', title: open ? 'Hide preview' : 'Preview next step',
-        onclick: () => { view.previewKey = open ? null : key; render(); } }, open ? '−' : '+'),
-      h('span', { class: 'hint' }, open
-        ? `Preview of step ${r + 2} — it unlocks when step ${r + 1} is complete.`
-        : `Step ${r + 2} of ${n} unlocks when step ${r + 1} is complete.`)));
-    if (open) out.push(stepCard(p, r + 1, true));
-  }
-  return out;
-}
-
-function tick(done) {
-  // Display-only status box: not clickable, ticks itself from the to-do answers.
-  return h('span', { class: 'tick' + (done ? ' on' : ''), role: 'checkbox', 'aria-checked': String(done), 'aria-disabled': 'true',
-    'aria-label': done ? 'Step complete' : 'Step not complete', title: 'Ticks automatically when all required to-do items are done' }, '✓');
-}
-
-function stepCard(p, i, preview) {
-  const steps = p.template.steps, s = steps[i], st = p.steps[s.id];
-  const done = st.status === 'done';
-  if (done && !preview && !view.expanded.has(s.id)) {
-    return h('button', { class: 'card step-line', type: 'button', 'aria-expanded': 'false', title: 'Click to expand and edit',
-      onclick: () => { view.expanded.add(s.id); render(); } },
-      tick(true), h('span', { class: 'step-num' }, `${i + 1}.`), h('span', { class: 'line-topic' }, s.topic || 'Untitled step'),
-      h('span', { class: 'meta' }, st.completedAt ? `Done ${fmtTime(st.completedAt)}` : 'Done'), h('span', { class: 'chev', 'aria-hidden': 'true' }, '▸'));
-  }
-  const hasReq = s.todos.some(t => t.required);
-  return h('section', { class: 'card step' + (preview ? ' preview' : '') + (st.status === 'active' ? ' active' : ''),
-      'aria-label': `Step ${i + 1}: ${s.topic || 'Untitled step'}` + (preview ? ' (preview, locked)' : '') },
-    h('div', { class: 'step-head' },
-      tick(done && !preview),
-      h('div', { class: 'step-titles' },
-        h('div', { class: 'step-num' }, `Step ${i + 1} of ${steps.length}` + (preview ? ' · Preview (locked)' : done ? ' · Done' : '')),
-        h('h3', {}, s.topic || 'Untitled step')),
-      done && !preview ? btn('Collapse', () => { view.expanded.delete(s.id); render(); }, 'small ghost') : null),
-    h('div', { class: 'step-body' },
-      s.todos.length
-        ? h('div', { class: 'todos' }, s.todos.map(t => todoView(p, s, t, preview)))
-        : h('p', { class: 'meta' }, 'No to-do items in this step.'),
-      hasReq ? h('div', { class: 'meta' }, h('span', { class: 'req-mark' }, '*'), ' required') : null,
-      (s.docs.length || s.forms.length) ? h('div', { class: 'links-grid' },
-        s.docs.length ? h('div', { class: 'links' }, h('h4', {}, '📄 Documentation'), h('ul', {}, s.docs.map(linkView))) : null,
-        s.forms.length ? h('div', { class: 'links' }, h('h4', {}, '📝 Loaded forms'), h('ul', {}, s.forms.map(linkView))) : null) : null,
-      h('label', { class: 'field' },
-        h('span', { class: 'sub' }, 'Notes'),
-        h('textarea', { rows: 3, value: st.note, disabled: preview, autocomplete: 'off',
-          placeholder: s.note || 'Write notes for this step…', dataset: { fk: `n-${p.id}-${s.id}`, step: s.id },
-          oninput: e => { st.note = e.target.value; p.updatedAt = now(); saveProjects(); } }))));
-}
-
-function todoView(p, s, t, disabled) {
-  const st = p.steps[s.id];
-  const a = st.answers[t.id];
-  const label = t.label || '(untitled)';
-  const req = t.required ? h('span', { class: 'req-mark', title: 'Required' }, ' *') : null;
-  const cls = 'todo' + (todoDone(t, a) ? ' is-done' : '');
-  const set = v => { st.answers[t.id] = v; answerChanged(p); };
-  const noOpts = t.options.length ? null : h('div', { class: 'meta' }, t.type === 'multitext' ? '(no text boxes defined)' : '(no options defined)');
-
-  switch (t.type) {
-    case 'checkbox':
-      return h('div', { class: cls },
-        h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: a === true, disabled, onchange: e => set(e.target.checked) }),
-          h('span', {}, label, req)));
-    case 'multi': {
-      const cur = Array.isArray(a) ? a : [];
-      return h('fieldset', { class: cls, disabled }, h('legend', {}, label, req),
-        h('div', {}, t.options.map(o => h('label', { class: 'check' },
-          h('input', { type: 'checkbox', checked: cur.includes(o), onchange: e => {
-            const sel = new Set(arr(st.answers[t.id]));
-            e.target.checked ? sel.add(o) : sel.delete(o);
-            set(t.options.filter(x => sel.has(x)));
-          } }), h('span', {}, o))), noOpts));
-    }
-    case 'single':
-      return h('fieldset', { class: cls, disabled }, h('legend', {}, label, req),
-        h('div', {}, t.options.map(o => h('label', { class: 'check' },
-          h('input', { type: 'radio', name: `r-${p.id}-${t.id}`, checked: a === o, onchange: () => set(o) }), h('span', {}, o))),
-          noOpts, a && !disabled ? btn('Clear choice', () => set(''), 'small ghost') : null));
-    case 'dropdown':
-      return h('div', { class: cls },
-        h('label', { class: 'field' }, h('span', { class: 'q' }, label, req),
-          h('select', { value: a || '', disabled, onchange: e => set(e.target.value) },
-            h('option', { value: '' }, '— Select —'), t.options.map(o => h('option', { value: o }, o)))));
-    case 'multitext': {
-      const cur = Array.isArray(a) ? a : [];
-      return h('fieldset', { class: cls, disabled }, h('legend', {}, label, req),
-        h('div', { class: 'multitext' }, t.options.map((o, k) => {
-          const inp = h('input', { type: 'text', value: cur[k] || '', autocomplete: 'off', placeholder: o,
-            dataset: { fk: `a-${p.id}-${t.id}-${k}`, step: s.id } });
-          inp.addEventListener('input', e => { if (!e.isComposing) textChanged(p, s, t, inp, k); else { st.answers[t.id][k] = inp.value; } });
-          inp.addEventListener('compositionend', () => textChanged(p, s, t, inp, k));
-          return h('label', { class: 'field' }, h('span', { class: 'sub' }, o), inp);
-        }), noOpts));
-    }
-    default: { // short text
-      const inp = h('input', { type: 'text', value: a || '', disabled, autocomplete: 'off', placeholder: 'Your answer',
-        dataset: { fk: `a-${p.id}-${t.id}`, step: s.id } });
-      // Don't redraw while an input method (IME) is composing; finish on compositionend.
-      inp.addEventListener('input', e => { if (!e.isComposing) textChanged(p, s, t, inp); else { st.answers[t.id] = inp.value; } });
-      inp.addEventListener('compositionend', () => textChanged(p, s, t, inp));
-      return h('div', { class: cls }, h('label', { class: 'field' }, h('span', { class: 'q' }, label, req), inp));
-    }
-  }
-}
-
-function answerChanged(p) {
-  recompute(p);
-  p.updatedAt = now();
-  saveProjects();
-  render();
-}
-function textChanged(p, s, t, inp, k = null) {
-  const st = p.steps[s.id];
-  if (k == null) st.answers[t.id] = inp.value.slice(0, 5000);
-  else st.answers[t.id][k] = inp.value.slice(0, 5000);
-  const before = statusSig(p);
-  recompute(p);
-  p.updatedAt = now();
-  saveProjects();
-  if (statusSig(p) !== before) render();
-  else inp.closest('.todo').classList.toggle('is-done', todoDone(t, st.answers[t.id]));
-}
-
-function openProject(id, scrollToCurrent = true) {
-  state.ui.openProjectId = id;
-  state.ui.tab = 'work';
-  view.expanded.clear();
-  view.previewKey = null;
-  saveUi();
-  render();
-  window.scrollTo(0, 0);
-  if (scrollToCurrent) {
-    const cur = document.querySelector('#page-work .step.active');
-    if (cur && cur.getBoundingClientRect().top > window.innerHeight * 0.6) cur.scrollIntoView({ block: 'start' });
-  }
-}
-function closeProject() {
-  state.ui.openProjectId = null;
-  saveUi(); render(); window.scrollTo(0, 0);
-}
 async function renameProject(p) {
   const name = await promptBox('Rename project', 'Project name', p.name);
   if (!name) return;
@@ -1155,6 +1504,7 @@ async function openProjectFile(file) {
   }
 }
 
+
 /* ───────────── PAGE 3: SUMMARY ───────────── */
 function answerText(t, a) {
   switch (t.type) {
@@ -1174,66 +1524,6 @@ function projectStatusText(p) {
   return p.completedAt ? `Complete — finished ${fmtDateTime(p.completedAt)}` : `In progress — step ${doneCount(p)} of ${n} complete`;
 }
 
-function renderSummary() {
-  const root = $('#page-summary');
-  if (!state.projects.length) {
-    root.replaceChildren(h('section', { class: 'card empty' }, 'No projects yet. Create one on the Work page, or open a project file there.'));
-    return;
-  }
-  const p = openProjectObj();
-  const projects = [...state.projects].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
-  const sel = h('select', { id: 'sumSel', value: p ? p.id : '', 'aria-label': 'Project',
-    onchange: e => { state.ui.openProjectId = e.target.value || null; view.expanded.clear(); view.previewKey = null; saveUi(); render(); } },
-    p ? null : h('option', { value: '' }, '— Choose a project —'),
-    projects.map(x => h('option', { value: x.id }, `${x.name} (${doneCount(x)}/${x.template.steps.length})`)));
-  const bar = h('section', { class: 'card toolbar no-print' },
-    h('div', { class: 'row wrap' }, h('label', { class: 'lbl', for: 'sumSel' }, 'Project'), sel),
-    p ? h('div', { class: 'row wrap between' },
-      h('label', { class: 'toggle' },
-        h('input', { type: 'checkbox', checked: view.summaryAnswers, onchange: e => { view.summaryAnswers = e.target.checked; render(); } }),
-        'Show to-do answers'),
-      h('div', { class: 'btn-group' },
-        btn('📋 Copy text', () => copySummary(p)),
-        btn('⬇ Download .txt', () => {
-          const name = fileSafe(p.name) + ' - summary.txt';
-          download(name, summaryText(p), 'text/plain;charset=utf-8');
-          toast(`Saved "${name}" to your downloads.`, 'ok');
-        }),
-        btn('🖨 Print / PDF', () => window.print()))) : null);
-  if (!p) { root.replaceChildren(bar); return; }
-
-  const n = p.template.steps.length, d = doneCount(p);
-  const fill = h('div', {});
-  fill.style.width = Math.round(d / n * 100) + '%';
-  const head = h('section', { class: 'card sum-head' },
-    h('h2', {}, p.name),
-    h('dl', { class: 'sum-facts' },
-      h('dt', {}, 'Setup'), h('dd', {}, p.template.name),
-      h('dt', {}, 'Started'), h('dd', {}, fmtDateTime(p.createdAt)),
-      h('dt', {}, 'Last updated'), h('dd', {}, fmtDateTime(p.updatedAt)),
-      h('dt', {}, 'Status'), h('dd', {}, projectStatusText(p))),
-    h('div', { class: 'progress', role: 'progressbar', 'aria-label': 'Project progress', 'aria-valuemin': 0, 'aria-valuemax': n, 'aria-valuenow': d }, fill),
-    h('div', { class: 'progress-label' }, `Step ${d} of ${n} complete`));
-
-  const steps = p.template.steps.map((s, i) => {
-    const st = p.steps[s.id];
-    const showAnswers = view.summaryAnswers && st.status !== 'locked' && s.todos.length;
-    return h('section', { class: 'card sum-step' },
-      h('div', { class: 'sum-step-head' },
-        h('span', { class: 'tick' + (st.status === 'done' ? ' on' : ''), 'aria-hidden': 'true' }, '✓'),
-        h('h3', {}, `${i + 1}. ${s.topic || 'Untitled step'}`),
-        h('span', { class: 'pill ' + st.status }, stepStatusText(st))),
-      showAnswers ? h('ul', { class: 'sum-answers' }, s.todos.map(t => {
-        const txt = answerText(t, st.answers[t.id]);
-        return h('li', {}, h('span', {}, t.label || '(untitled)', t.required ? h('span', { class: 'req-mark' }, ' *') : null),
-          h('span', { class: 'a' + (txt ? '' : ' none') }, txt || '—'));
-      })) : null,
-      st.note.trim()
-        ? h('div', { class: 'sum-note' }, st.note)
-        : h('div', { class: 'sum-note none' }, st.status === 'locked' ? 'Not started yet.' : 'No notes.'));
-  });
-  root.replaceChildren(bar, head, ...steps);
-}
 
 function summaryText(p) {
   const n = p.template.steps.length;
@@ -1285,12 +1575,78 @@ async function clearAll() {
   state.setups = [sampleSetup()];
   state.activeSetupId = state.setups[0].id;
   state.ui.openProjectId = null;
-  view.expanded.clear();
+  view.sel = {};
+  view.setupSel = null;
   saveSetups(); saveProjects(); saveUi(); render();
   toast('All data in this browser was cleared. The sample setup was restored.', 'ok');
 }
 
+
+function renderSummary() {
+  const root = $('#page-summary');
+  if (!state.projects.length) {
+    root.replaceChildren(pageHead('Summary', 'A read-only report of a project.'),
+      h('div', { class: 'panel empty' }, h('div', { class: 'empty-ic' }, icon('list')), h('h3', {}, 'No projects yet'),
+        'Create a project on the Work page, or open a project file there.'));
+    return;
+  }
+  const p = openProjectObj();
+  const projects = [...state.projects].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+  const sel = h('select', { id: 'sumSel', value: p ? p.id : '', 'aria-label': 'Project',
+    onchange: e => { state.ui.openProjectId = e.target.value || null; view.previewKey = null; saveUi(); render(); } },
+    p ? null : h('option', { value: '' }, 'Choose a project…'),
+    projects.map(x => h('option', { value: x.id }, `${x.name} (${doneCount(x)}/${x.template.steps.length})`)));
+  const bar = h('div', { class: 'panel sum-toolbar no-print' },
+    h('label', { class: 'field-label', for: 'sumSel' }, 'Project'), sel,
+    p ? h('label', { class: 'switch' },
+      h('input', { type: 'checkbox', class: 'sr', checked: view.summaryAnswers, onchange: e => { view.summaryAnswers = e.target.checked; render(); } }),
+      h('span', { class: 'track', 'aria-hidden': 'true' }), 'Show to-do answers') : null,
+    p ? h('div', { class: 'btn-row', style: 'margin-left:auto' },
+      btn([icon('copy'), 'Copy text'], () => copySummary(p)),
+      btn([icon('download'), 'Download .txt'], () => {
+        const name = fileSafe(p.name) + ' - summary.txt';
+        download(name, summaryText(p), 'text/plain;charset=utf-8');
+        toast(`Saved "${name}" to your downloads.`, 'ok');
+      }),
+      btn([icon('printer'), 'Print / PDF'], () => window.print(), 'primary')) : null);
+  const head = h('div', { class: 'no-print' }, pageHead('Summary', 'A read-only report of the steps, answers and notes of a project.'));
+  if (!p) { root.replaceChildren(head, bar); return; }
+
+  const n = p.template.steps.length, d = doneCount(p);
+  const doc = h('article', { class: 'panel sum-doc' },
+    h('div', { class: 'eyebrow' }, 'Project summary'),
+    h('h1', { style: 'margin-top:4px' }, p.name),
+    h('dl', { class: 'sum-facts' },
+      h('div', {}, h('dt', {}, 'Setup'), h('dd', {}, p.template.name)),
+      h('div', {}, h('dt', {}, 'Started'), h('dd', {}, fmtDateTime(p.createdAt))),
+      h('div', {}, h('dt', {}, 'Last updated'), h('dd', {}, fmtDateTime(p.updatedAt))),
+      h('div', {}, h('dt', {}, 'Status'), h('dd', {}, p.completedAt ? `Complete · ${fmtDateTime(p.completedAt)}` : `In progress · ${d} of ${n} steps`))),
+    h('div', { class: 'progress-top', style: 'margin-bottom:8px' }, h('span', {}, `Step ${d} of ${n} complete`), h('span', { class: 'pct' }, Math.round(d / n * 100) + '%')),
+    progressBar(d, n),
+    h('div', { style: 'margin-top:8px' }, p.template.steps.map((s, i) => {
+      const st = p.steps[s.id];
+      const stateCls = st.status === 'done' ? 's-done' : st.status === 'active' ? 's-current' : 's-locked';
+      const chip = st.status === 'done' ? h('span', { class: 'chip ok' }, icon('check'), st.completedAt ? `Done · ${fmtDateTime(st.completedAt)}` : 'Done')
+        : st.status === 'active' ? h('span', { class: 'chip accent' }, 'In progress') : h('span', { class: 'chip' }, icon('lock'), 'Not started');
+      const showAnswers = view.summaryAnswers && st.status !== 'locked' && s.todos.length;
+      return h('section', { class: 'sum-step ' + stateCls },
+        h('div', { class: 'sum-step-head' },
+          h('span', { class: 'circle' }, st.status === 'done' ? icon('check') : i + 1),
+          h('h3', {}, s.topic || 'Untitled step'), chip),
+        showAnswers ? h('div', { class: 'sum-answers' }, s.todos.map(t => {
+          const txt = answerText(t, st.answers[t.id]);
+          return [h('div', { class: 'q' }, t.label || '(untitled)', t.required ? h('span', { class: 'req-star', style: 'color:var(--danger)' }, ' *') : null),
+            h('div', { class: 'a' + (txt ? '' : ' none') }, txt || '—')];
+        })) : null,
+        st.note.trim() ? h('div', { class: 'sum-note' }, h('div', { class: 't' }, 'Notes'), st.note)
+          : st.status !== 'locked' ? h('div', { class: 'sum-note none' }, 'No notes.') : null);
+    })));
+  root.replaceChildren(head, bar, doc);
+}
+
+/* ───────────── Global wiring ───────────── */
 function init() {
+  document.querySelectorAll('[data-icon]').forEach(e => e.replaceChildren(icon(e.dataset.icon)));
   for (const t of ['setup', 'work', 'summary'])
     $('#tab-' + t).addEventListener('click', () => { state.ui.tab = t; saveUi(); render(); window.scrollTo(0, 0); });
   $('#themeBtn').addEventListener('click', () => {
